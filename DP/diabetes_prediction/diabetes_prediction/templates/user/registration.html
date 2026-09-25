@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your Account - Health Management</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            color: #0f172a;
+            background-color: #f4f3ef;
+        }
+
+        /* Layout Container */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: #003366;
+            color: white;
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .brand-heading {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #ffffff;
+        }
+
+        .brand-heading svg {
+            width: 28px;
+            height: 28px;
+            color: #60a5fa;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            color: #cbd5e1;
+            font-weight: 600;
+            font-size: 15.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item a:hover, .nav-item a.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            overflow-y: auto;
+        }
+
+        .registration-card {
+            background: #f7f6f2;
+            width: 100%;
+            max-width: 680px;
+            border-radius: 24px;
+            padding: 44px 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #eae8e1;
+        }
+
+        /* Top Avatar Icon */
+        .avatar-container {
+            width: 68px;
+            height: 68px;
+            background: #dbeafe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .avatar-icon {
+            width: 32px;
+            height: 32px;
+            color: #1d4ed8;
+        }
+
+        /* Title */
+        .title {
+            font-size: 28px;
+            font-weight: 800;
+            color: #0d253a;
+            margin-bottom: 32px;
+            text-align: center;
+            letter-spacing: -0.4px;
+        }
+
+        /* Form Grid */
+        .registration-form {
+            width: 100%;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 24px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .required-star {
+            color: #dc2626;
+            margin-left: 3px;
+            font-weight: 700;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            height: 48px;
+            padding: 0 14px;
+            border: 1.5px solid #94a3b8;
+            border-radius: 8px;
+            font-size: 14.5px;
+            color: #0f172a;
+            background: #ffffff;
+            outline: none;
+            transition: all 0.2s ease;
+            appearance: none;
+        }
+
+        .form-select {
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%20475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 38px;
+            cursor: pointer;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: #003366;
+            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+        }
+
+        .form-input.error, .form-select.error {
+            border-color: #dc2626;
+            background-color: #fef2f2;
+        }
+
+        /* Custom toggle password button */
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+        }
+
+        .toggle-password svg { width: 20px; height: 20px; }
+
+        /* Validation Error Texts */
+        .error-text {
+            color: #dc2626;
+            font-size: 12.5px;
+            font-weight: 600;
+            margin-top: 6px;
+            display: none;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            height: 52px;
+            background-color: #003366;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover { background-color: #002244; transform: translateY(-1px); }
+        .submit-btn:active { transform: translateY(0); }
+
+        /* Footer */
+        .login-footer {
+            margin-top: 24px;
+            font-size: 14.5px;
+            color: #475569;
+            text-align: center;
+        }
+
+        .login-link {
+            color: #003366;
+            font-weight: 700;
+            text-decoration: none;
+            margin-left: 4px;
+        }
+        .login-link:hover { text-decoration: underline; }
+
+        /* Modal Popup Styles */
+        .popup-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 999; opacity: 0; visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .popup-overlay.active { opacity: 1; visibility: visible; }
+
+        .popup-card {
+            background: #ffffff; border-radius: 20px; padding: 32px 28px;
+            width: 90%; max-width: 380px; text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .popup-overlay.active .popup-card { transform: scale(1); }
+
+        .popup-icon-wrapper {
+            width: 64px; height: 64px; background: #dcfce7; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 18px auto;
+        }
+
+        .popup-icon { width: 32px; height: 32px; color: #16a34a; }
+        .popup-title { font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+        .popup-text { font-size: 14px; color: #64748b; line-height: 1.5; margin-bottom: 24px; }
+        .popup-btn {
+            width: 100%; height: 44px; background: #16a34a; color: #ffffff;
+            border: none; border-radius: 10px; font-size: 15px; font-weight: 700;
+            cursor: pointer; transition: background 0.2s ease;
+        }
+        .popup-btn:hover { background: #15803d; }
+
+        /* Responsive Layout */
+        @media (max-width: 900px) {
+            .app-container { flex-direction: column; }
+            .sidebar { width: 100%; padding: 20px; flex-direction: row; justify-content: space-between; align-items: center; }
+            .brand-heading { margin-bottom: 0; }
+            .nav-menu { flex-direction: row; display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .registration-card { padding: 32px 20px; border-radius: 16px; }
+            .form-grid { grid-template-columns: 1fr; gap: 16px; }
+        }
+        /* Top Header / Navigation Bar */
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 0;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon-box {
+            width: 38px;
+            height: 38px;
+            background-color: #0B2840;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(11, 40, 64, 0.15);
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0B2840;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #475569;
+            transition: color 0.2s ease;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-item a:hover {
+            color: #0B2840;
+        }
+
+        .nav-item.active a {
+            color: #0B2840;
+            font-weight: 700;
+        }
+
+        .nav-item.active a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background-color: #0B2840;
+            border-radius: 2px;
+        }
+
+        .btn-register {
+            background-color: #0B2840;
+            color: #ffffff !important;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 700 !important;
+            text-decoration: none;
+            transition: all 0.2s ease !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header>
+        <div class="header-container">
+            <a href="{% url 'home' %}" class="brand-logo">
+                <div class="logo-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="4" />
+                        <path d="M12 8v8M8 12h8" />
+                    </svg>
+                </div>
+                <span class="brand-name">DIABETES CARE</span>
+            </a>
+
+            <ul class="nav-links">
+                <li class="nav-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a href="{% url 'health_record' %}">Health Record</a></li>
+                <li class="nav-item"><a href="{% url 'user_login' %}">Login</a></li>
+                <li class="nav-item active"><a href="{% url 'user_registration' %}" class="btn-register">Register</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="app-container">
+
+        <!-- Aside Navigation -->
+        <aside class="sidebar">
+            <div class="brand-heading">
+                <a href="{% url 'home' %}" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 12px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                    Diabetes Care
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a href="{% url 'user_login' %}">Login</a></li>
+                <li class="nav-item"><a href="{% url 'user_registration' %}" class="active">Create Account</a></li>
+                <li class="nav-item"><a href="{% url 'health_record' %}">Health Record</a></li>
+                <li class="nav-item"><a href="{% url 'view_profile' %}">Profile Dashboard</a></li>
+            </ul>
+
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="registration-card">
+                <div class="avatar-container">
+                    <svg class="avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+
+                <h1 class="title">Create Your Account</h1>
+
+                <form class="registration-form" id="registerForm" novalidate>
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="name">Full Name <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="text" id="name" name="name" class="form-input" placeholder="e.g. John Doe" required>
+                            </div>
+                            <span class="error-text" id="nameError">Please enter a valid full name (letters only).</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="email" id="email" name="email" class="form-input" placeholder="Enter email" required>
+                            </div>
+                            <span class="error-text" id="emailError">Please enter a valid email address.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="tel" id="phone" name="phone" class="form-input" placeholder="10-digit number" required>
+                            </div>
+                            <span class="error-text" id="phoneError">Please enter a valid 10-digit phone number.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dob">Date of Birth <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="date" id="dob" name="dob" class="form-input" required>
+                            </div>
+                            <span class="error-text" id="dobError">Please select a valid date in the past.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gender">Gender <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <select id="gender" name="gender" class="form-select" required>
+                                    <option value="" disabled selected>Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <span class="error-text" id="genderError">Please select a gender.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="height">Height (cm) <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="number" step="0.1" id="height" name="height" class="form-input" placeholder="e.g. 175" required>
+                            </div>
+                            <span class="error-text" id="heightError">Height must be between 50 and 300 cm.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="weight">Weight (kg) <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="number" step="0.1" min="10" max="200" id="weight" name="weight" class="form-input" placeholder="e.g. 70" required>
+                            </div>
+                            <span class="error-text" id="weightError">Weight must be between 10 and 200 kg.</span>
+                        </div>
+
+                        <!-- Empty div to keep the grid aligned -->
+                        <div class="form-group hidden-desktop"></div>
+
+                        <div class="form-group">
+                            <label for="password">Password <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="password" id="password" class="form-input" placeholder="Create password" required>
+                                <button type="button" class="toggle-password" id="togglePasswordBtn">
+                                    <svg class="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    <svg class="eyeSlashIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                            <!-- Updated password error message -->
+                            <span class="error-text" id="passwordError">Password must be at least 8 characters long.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirm_password">Confirm Password <span class="required-star">*</span></label>
+                            <div class="input-wrapper">
+                                <input type="password" id="confirm_password" class="form-input" placeholder="Confirm password" required>
+                                <button type="button" class="toggle-password" id="toggleConfirmBtn">
+                                    <svg class="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    <svg class="eyeSlashIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                            <span class="error-text" id="confirmError">Passwords do not match.</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Register</button>
+                </form>
+
+                <div class="login-footer">
+                    Already have an account? <a href="{% url 'user_login' %}" class="login-link">Login</a>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Success Modal Popup -->
+    <div class="popup-overlay" id="successPopup">
+        <div class="popup-card">
+            <div class="popup-icon-wrapper">
+                <svg class="popup-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h3 class="popup-title">Registration Successful!</h3>
+            <p class="popup-text">Your account has been created successfully. Redirecting you to the login page...</p>
+            <button class="popup-btn" id="closePopupBtn">Proceed to Login</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Password Toggle Logic
+            function setupPasswordToggle(btnId, inputId) {
+                const btn = document.getElementById(btnId);
+                const input = document.getElementById(inputId);
+                const eyeIcon = btn.querySelector('.eyeIcon');
+                const eyeSlashIcon = btn.querySelector('.eyeSlashIcon');
+
+                btn.addEventListener('click', function () {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+
+                    if (type === 'password') {
+                        eyeIcon.style.display = 'block';
+                        eyeSlashIcon.style.display = 'none';
+                    } else {
+                        eyeIcon.style.display = 'none';
+                        eyeSlashIcon.style.display = 'block';
+                    }
+                });
+            }
+
+            setupPasswordToggle('togglePasswordBtn', 'password');
+            setupPasswordToggle('toggleConfirmBtn', 'confirm_password');
+
+            // Restrict DOB date picker to past dates only (excluding today)
+            const dobInputElem = document.getElementById('dob');
+            if (dobInputElem) {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                const yyyy = yesterday.getFullYear();
+                const mm = String(yesterday.getMonth() + 1).padStart(2, '0');
+                const dd = String(yesterday.getDate()).padStart(2, '0');
+                dobInputElem.max = `${yyyy}-${mm}-${dd}`;
+            }
+
+            // Form Validation Logic
+            const form = document.getElementById('registerForm');
+            const successPopup = document.getElementById('successPopup');
+            const closePopupBtn = document.getElementById('closePopupBtn');
+            const emailInput = document.getElementById('email');
+
+            function showError(inputId, errorId, show, customMsg = null) {
+                const input = document.getElementById(inputId);
+                const error = document.getElementById(errorId);
+                if (customMsg && error) {
+                    error.textContent = customMsg;
+                }
+                if (show) {
+                    input.classList.add('error');
+                    error.style.display = 'block';
+                } else {
+                    input.classList.remove('error');
+                    error.style.display = 'none';
+                }
+            }
+
+            // Real-time Duplicate Email Check on Blur
+            emailInput.addEventListener('blur', function () {
+                const emailVal = emailInput.value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (emailRegex.test(emailVal)) {
+                    fetch("{% url 'check_email' %}?email=" + encodeURIComponent(emailVal))
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.exists) {
+                                showError('email', 'emailError', true, 'This email is already registered. Please login.');
+                            }
+                        })
+                        .catch(err => console.error(err));
+                }
+            });
+
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                let isValid = true;
+
+                // 1. Name Validation
+                const name = document.getElementById('name').value;
+                const nameRegex = /^[a-zA-Z\s]{2,50}$/;
+                if (!nameRegex.test(name)) {
+                    showError('name', 'nameError', true, 'Please enter a valid full name (letters only).');
+                    isValid = false;
+                } else {
+                    showError('name', 'nameError', false);
+                }
+
+                // 2. Email Validation
+                const email = emailInput.value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showError('email', 'emailError', true, 'Please enter a valid email address.');
+                    isValid = false;
+                } else {
+                    showError('email', 'emailError', false);
+                }
+
+                // 3. Phone Validation
+                const phone = document.getElementById('phone').value;
+                const phoneRegex = /^\d{10}$/;
+                if (!phoneRegex.test(phone)) {
+                    showError('phone', 'phoneError', true, 'Please enter a 10-digit phone number.');
+                    isValid = false;
+                } else {
+                    showError('phone', 'phoneError', false);
+                }
+
+                // 4. DOB Validation
+                const dobVal = document.getElementById('dob').value;
+                if (!dobVal) {
+                    showError('dob', 'dobError', true, 'Please select a valid date of birth.');
+                    isValid = false;
+                } else {
+                    const dobParts = dobVal.split('-');
+                    const dobDate = new Date(parseInt(dobParts[0], 10), parseInt(dobParts[1], 10) - 1, parseInt(dobParts[2], 10));
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    if (isNaN(dobDate.getTime())) {
+                        showError('dob', 'dobError', true, 'Please enter a valid date of birth.');
+                        isValid = false;
+                    } else if (dobDate >= today) {
+                        showError('dob', 'dobError', true, 'Date of birth cannot be today or a future date. Please select a past date.');
+                        isValid = false;
+                    } else {
+                        showError('dob', 'dobError', false);
+                    }
+                }
+
+                // 5. Gender Validation
+                const gender = document.getElementById('gender').value;
+                if (gender === "") {
+                    showError('gender', 'genderError', true, 'Please select your gender.');
+                    isValid = false;
+                } else {
+                    showError('gender', 'genderError', false);
+                }
+
+                // 6. Height Validation
+                const height = document.getElementById('height').value;
+                if (!height || height < 50 || height > 300) {
+                    showError('height', 'heightError', true, 'Height must be between 50cm and 300cm.');
+                    isValid = false;
+                } else {
+                    showError('height', 'heightError', false);
+                }
+
+                // 7. Weight Validation
+                const weight = document.getElementById('weight').value;
+                if (!weight || weight < 10 || weight > 200) {
+                    showError('weight', 'weightError', true, 'Weight must be between 10kg and 200kg.');
+                    isValid = false;
+                } else {
+                    showError('weight', 'weightError', false);
+                }
+
+                // 8. Password Validation
+                const password = document.getElementById('password').value;
+                if (!password || password.length < 8) {
+                    showError('password', 'passwordError', true, 'Password must be at least 8 characters long.');
+                    isValid = false;
+                } else {
+                    showError('password', 'passwordError', false);
+                }
+
+                // 9. Confirm Password Validation
+                const confirmPassword = document.getElementById('confirm_password').value;
+                if (!confirmPassword || confirmPassword !== password) {
+                    showError('confirm_password', 'confirmError', true, 'Passwords do not match.');
+                    isValid = false;
+                } else {
+                    showError('confirm_password', 'confirmError', false);
+                }
+
+                if (!isValid) return;
+
+                // Server Check for Duplicate Email & Registration Submission
+                try {
+                    const formData = new FormData(form);
+                    formData.set('name', name);
+                    formData.set('email', email);
+                    formData.set('phone', phone);
+                    formData.set('dob', dobVal);
+                    formData.set('gender', gender);
+                    formData.set('height', height);
+                    formData.set('weight', weight);
+                    formData.set('password', password);
+
+
+                    const response = await fetch("{% url 'user_registration' %}", {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        }
+                    });
+                    const data = await response.json();
+
+                    if (!data.success) {
+                        if (data.duplicate_email) {
+                            showError('email', 'emailError', true, data.message);
+                        } else {
+                            alert(data.message || "Registration failed.");
+                        }
+                    } else {
+                        successPopup.classList.add('active');
+                        setTimeout(function () {
+                            window.location.href = "{% url 'user_login' %}";
+                        }, 2200);
+                    }
+                } catch (err) {
+                    console.error("Submit error:", err);
+                    successPopup.classList.add('active');
+                    setTimeout(function () {
+                        window.location.href = "{% url 'user_login' %}";
+                    }, 2200);
+                }
+            });
+
+            closePopupBtn.addEventListener('click', function () {
+                window.location.href = "{% url 'user_login' %}";
+            });
+
+
+        });
+    </script>
+</body>
+</html>

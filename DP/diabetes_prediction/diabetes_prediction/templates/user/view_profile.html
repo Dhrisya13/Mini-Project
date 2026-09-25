@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Diabetes Care & Health Management</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        /* Top Header / Navigation Bar */
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 0;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon-box {
+            width: 38px;
+            height: 38px;
+            background-color: #0B2840;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(11, 40, 64, 0.15);
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0B2840;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #475569;
+            transition: color 0.2s ease;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-item a:hover {
+            color: #0B2840;
+        }
+
+        .nav-item.active a {
+            color: #0B2840;
+            font-weight: 700;
+        }
+
+        .nav-item.active a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background-color: #0B2840;
+            border-radius: 2px;
+        }
+
+        .btn-nav-outline {
+            border: 1.5px solid #0B2840;
+            color: #0B2840 !important;
+            padding: 7px 18px;
+            border-radius: 50px;
+            font-weight: 700 !important;
+            transition: all 0.2s ease;
+        }
+
+        .btn-nav-outline:hover {
+            background-color: #0B2840;
+            color: #ffffff !important;
+        }
+
+        .main-wrapper {
+            flex: 1;
+            padding: 36px 20px 60px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .profile-container {
+            width: 100%;
+            max-width: 850px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Profile Header Card */
+        .profile-header-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 36px 40px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04), 0 0 1px 1px rgba(15, 23, 42, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-header-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #0B2840 0%, #0b3b95 100%);
+        }
+
+        .avatar-info-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .avatar-wrapper {
+            width: 84px;
+            height: 84px;
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 4px solid #ffffff;
+            box-shadow: 0 4px 14px rgba(11, 59, 149, 0.15);
+            font-size: 32px;
+            font-weight: 800;
+            color: #0b3b95;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .user-name {
+            font-size: 26px;
+            font-weight: 800;
+            color: #0b192c;
+            letter-spacing: -0.4px;
+        }
+
+        .user-meta {
+            font-size: 14.5px;
+            color: #64748b;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .badge-active {
+            background: #dcfce7;
+            color: #16a34a;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .badge-active::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #16a34a;
+            border-radius: 50%;
+        }
+
+        /* Detail Cards */
+        .details-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 32px 40px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04), 0 0 1px 1px rgba(15, 23, 42, 0.05);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0b192c;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title svg {
+            width: 20px;
+            height: 20px;
+            color: #0b3b95;
+        }
+
+        /* Grids */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+        }
+
+        .data-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .data-label {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        /* BMI Badges */
+        .bmi-badge {
+            display: inline-block;
+            margin-top: 4px;
+            font-size: 12.5px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 6px;
+            width: fit-content;
+        }
+
+        .bmi-normal { background: #dcfce7; color: #16a34a; }
+        .bmi-under { background: #e0f2fe; color: #0284c7; }
+        .bmi-over { background: #fef3c7; color: #d97706; }
+        .bmi-obese { background: #fee2e2; color: #dc2626; }
+        .bmi-none { background: #f1f5f9; color: #64748b; }
+
+        /* Diabetes Assessment Callout Card */
+        .assessment-card {
+            background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+            border: 1px solid #c7d2fe;
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 8px;
+        }
+
+        .assessment-text h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 4px;
+        }
+
+        .assessment-text p {
+            font-size: 14px;
+            color: #3b82f6;
+        }
+
+        /* Risk Badges */
+        .risk-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .risk-low { background: #dcfce7; color: #15803d; }
+        .risk-moderate { background: #fef3c7; color: #b45309; }
+        .risk-high { background: #fee2e2; color: #b91c1c; }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: #f1f5f9;
+            margin: 28px 0;
+            width: 100%;
+        }
+
+        /* Action Buttons */
+        .action-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 14px;
+            margin-top: 8px;
+        }
+
+        .btn {
+            height: 48px;
+            padding: 0 24px;
+            border-radius: 12px;
+            font-size: 14.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #475569;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-outline:hover {
+            background: #f8fafc;
+            color: #0f172a;
+            border-color: #cbd5e1;
+        }
+
+        .btn-secondary {
+            background: #e0e7ff;
+            color: #0b3b95;
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background: #c7d2fe;
+            color: #06235c;
+        }
+
+        .btn-primary {
+            background: #0B2840;
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 4px 12px rgba(11, 40, 64, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: #061928;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(11, 40, 64, 0.3);
+        }
+
+        @media (max-width: 700px) {
+            .profile-header-card {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 28px 24px;
+            }
+            .details-card {
+                padding: 28px 24px;
+            }
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .action-footer {
+                flex-direction: column-reverse;
+            }
+            .btn {
+                width: 100%;
+            }
+            .assessment-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header>
+        <div class="header-container">
+            <a href="{% url 'home' %}" class="brand-logo">
+                <div class="logo-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="4" />
+                        <path d="M12 8v8M8 12h8" />
+                    </svg>
+                </div>
+                <span class="brand-name">DIABETES CARE</span>
+            </a>
+
+            <ul class="nav-links">
+                <li class="nav-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a href="{% url 'predict_risk' %}">Risk Prediction</a></li>
+                <li class="nav-item"><a href="{% url 'view_prediction' %}">View Report</a></li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a href="{% url 'prediction_history' %}">Database Tracking</a></li>
+                    <li class="nav-item"><a href="{% url 'analytics_dashboard' %}">Analytics Dashboard</a></li>
+                    <li class="nav-item"><a href="{% url 'recommendation_engine' %}">Recommendations</a></li>
+                    <li class="nav-item"><a href="{% url 'health_record' %}">Health Record</a></li>
+                    <li class="nav-item active"><a href="{% url 'view_profile' %}">Profile</a></li>
+                    <li class="nav-item"><a href="{% url 'user_logout' %}" class="btn-nav-outline">Logout</a></li>
+                {% else %}
+                    <li class="nav-item"><a href="{% url 'user_login' %}" class="btn-nav-outline">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+        <div class="profile-container">
+
+            <!-- Profile Header Card -->
+            <div class="profile-header-card">
+                <div class="avatar-info-group">
+                    <div class="avatar-wrapper">
+                        {% if full_name %}{{ full_name|slice:":1"|upper }}{% else %}U{% endif %}
+                    </div>
+                    <div class="user-info">
+                        <h1 class="user-name">{{ full_name }}</h1>
+                        <div class="user-meta">
+                            <span>Patient ID: <strong>{{ patient_id }}</strong></span>
+                            <span class="badge-active">Active Patient</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Section Card -->
+            <div class="details-card">
+
+                <!-- 1. Personal Information -->
+                <h2 class="section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    Personal Information
+                </h2>
+
+                <div class="grid-3">
+                    <div class="data-group">
+                        <span class="data-label">Email Address</span>
+                        <span class="data-value">{{ email }}</span>
+                    </div>
+                    <div class="data-group">
+                        <span class="data-label">Phone Number</span>
+                        <span class="data-value">{{ phone }}</span>
+                    </div>
+                    <div class="data-group">
+                        <span class="data-label">Gender</span>
+                        <span class="data-value">{{ gender }}</span>
+                    </div>
+                    <div class="data-group">
+                        <span class="data-label">Date of Birth</span>
+                        <span class="data-value">{{ dob }}</span>
+                    </div>
+                    <div class="data-group">
+                        <span class="data-label">Age</span>
+                        <span class="data-value">{{ age }}</span>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- 2. Physical & Health Metrics -->
+                <h2 class="section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                    Health & Physical Metrics
+                </h2>
+
+                <div class="grid-3">
+                    <div class="data-group">
+                        <span class="data-label">Height</span>
+                        <span class="data-value">{{ height }}</span>
+                    </div>
+                    <div class="data-group">
+                        <span class="data-label">Weight</span>
+                        <span class="data-value">{{ weight }}</span>
+                    </div>
+                    <div class="data-group">
+                        <span class="data-label">Body Mass Index (BMI)</span>
+                        <span class="data-value">{{ bmi }}</span>
+                        {% if bmi_status == "Normal Weight" %}
+                            <span class="bmi-badge bmi-normal">{{ bmi_status }}</span>
+                        {% elif bmi_status == "Underweight" %}
+                            <span class="bmi-badge bmi-under">{{ bmi_status }}</span>
+                        {% elif bmi_status == "Overweight" %}
+                            <span class="bmi-badge bmi-over">{{ bmi_status }}</span>
+                        {% elif bmi_status == "Obese" %}
+                            <span class="bmi-badge bmi-obese">{{ bmi_status }}</span>
+                        {% else %}
+                            <span class="bmi-badge bmi-none">{{ bmi_status }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- 3. Lifestyle Details -->
+                <h2 class="section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 15 15"></polyline>
+                    </svg>
+                    Lifestyle Habits
+                </h2>
+
+                <div class="grid-3">
+                    <div class="data-group">
+                        <span class="data-label">Smoking Status</span>
+                        <span class="data-value">{{ smoking }}</span>
+                    </div>
+                    <div class="data-group">
+                        <span class="data-label">Sleep Duration</span>
+                        <span class="data-value">{{ sleep_duration }}</span>
+                    </div>
+                    <div class="data-group">
+                        <span class="data-label">Alcohol Consumption</span>
+                        <span class="data-value">{{ alcohol }}</span>
+                    </div>
+                    <div class="data-group">
+                        <span class="data-label">Water Intake</span>
+                        <span class="data-value">{{ water_intake }}</span>
+                    </div>
+                    <div class="data-group" style="grid-column: span 2;">
+                        <span class="data-label">Physical Activity Level</span>
+                        <span class="data-value">{{ physical_activity }}</span>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- 4. Diabetes Risk & Prediction Overview -->
+                <h2 class="section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                    </svg>
+                    Diabetes Health & Risk Assessment
+                </h2>
+
+                {% if latest_risk %}
+                    <div class="assessment-card">
+                        <div class="assessment-text">
+                            <h3>Latest Diabetes Assessment Result</h3>
+                            <p>Prediction Date: {{ latest_risk.Prediction_date }}</p>
+                        </div>
+                        <div>
+                            {% if "low" in latest_risk.Risk_level|lower %}
+                                <span class="risk-badge risk-low">{{ latest_risk.Risk_level }}</span>
+                            {% elif "mod" in latest_risk.Risk_level|lower %}
+                                <span class="risk-badge risk-moderate">{{ latest_risk.Risk_level }}</span>
+                            {% else %}
+                                <span class="risk-badge risk-high">{{ latest_risk.Risk_level }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if latest_prediction %}
+                    <div class="grid-3" style="margin-top: 16px;">
+                        <div class="data-group">
+                            <span class="data-label">Glucose Level</span>
+                            <span class="data-value">{{ latest_prediction.Glucose }} mg/dL</span>
+                        </div>
+                        <div class="data-group">
+                            <span class="data-label">Blood Pressure</span>
+                            <span class="data-value">{{ latest_prediction.Blood_Pressure }} mmHg</span>
+                        </div>
+                        <div class="data-group">
+                            <span class="data-label">Insulin Level</span>
+                            <span class="data-value">{{ latest_prediction.Insulin }} mu U/ml</span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div style="margin-top: 18px; text-align: right;">
+                        <a href="{% url 'view_prediction' %}" class="btn btn-secondary" style="background: #0284c7; color: #ffffff; padding: 10px 18px; font-size: 13.5px; border-radius: 10px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                            View Report & Suggestions →
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="assessment-card">
+                        <div class="assessment-text">
+                            <h3>Keep Your Health Record Updated</h3>
+                            <p>Log your latest vitals and physical health parameters to track your diabetes risk profile.</p>
+                        </div>
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <!-- Action Buttons Footer -->
+            <div class="action-footer">
+
+                <a href="{% url 'prediction_history' %}" class="btn btn-secondary" style="background: #0284c7; color: #ffffff;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>
+                    </svg>
+                    Database Tracking
+                </a>
+
+                <a href="{% url 'predict_risk' %}" class="btn btn-secondary" style="background: #0B2840; color: #ffffff;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                    Risk Prediction
+                </a>
+
+                <a href="{% url 'edit_profile' %}" class="btn btn-primary">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Edit Profile
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

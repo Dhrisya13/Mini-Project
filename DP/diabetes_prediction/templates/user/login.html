@@ -1,0 +1,679 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Diabetes Care</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        /* Top Header / Navigation Bar */
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 0;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon-box {
+            width: 38px;
+            height: 38px;
+            background-color: #0B2840;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(11, 40, 64, 0.15);
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0B2840;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #475569;
+            transition: color 0.2s ease;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-item a:hover {
+            color: #0B2840;
+        }
+
+        .nav-item.active a {
+            color: #0B2840;
+            font-weight: 700;
+        }
+
+        .nav-item.active a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background-color: #0B2840;
+            border-radius: 2px;
+        }
+
+        .btn-register {
+            background-color: #0B2840;
+            color: #ffffff !important;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 700 !important;
+            text-decoration: none;
+            transition: all 0.2s ease !important;
+        }
+
+        .btn-register:hover {
+            background-color: #143A5D;
+        }
+
+        /* Main Wrapper for Center Alignment */
+        .main-wrapper {
+            flex: 1;
+            width: 100%;
+            padding: 40px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 440px;
+            border-radius: 24px;
+            padding: 44px 36px;
+            box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.07), 
+                        0 0 1px 1px rgba(15, 23, 42, 0.05);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: auto;
+        }
+
+        /* Top Avatar Icon */
+        .avatar-container {
+            width: 72px;
+            height: 72px;
+            background: #0B2840;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 16px -4px rgba(11, 40, 64, 0.3);
+        }
+
+        .avatar-icon {
+            width: 34px;
+            height: 34px;
+            color: #ffffff;
+        }
+
+        /* Typography */
+        .title {
+            font-size: 30px;
+            font-weight: 800;
+            color: #0B2840;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #64748b;
+            font-weight: 500;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        /* Form Controls */
+        .login-form {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .forgot-link {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0B2840;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .forgot-link:hover {
+            color: #143A5D;
+            text-decoration: underline;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 50px;
+            padding: 0 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            color: #0f172a;
+            background: #ffffff;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-input::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-input:focus {
+            border-color: #0B2840;
+            box-shadow: 0 0 0 4px rgba(11, 40, 64, 0.1);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            transition: color 0.2s ease;
+        }
+
+        .toggle-password:hover {
+            color: #0B2840;
+        }
+
+        .toggle-password svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        /* Checkbox */
+        .remember-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 4px;
+            margin-bottom: 28px;
+            cursor: pointer;
+        }
+
+        .custom-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .remember-input {
+            display: none;
+        }
+
+        .remember-input:checked + .custom-checkbox {
+            background-color: #0B2840;
+            border-color: #0B2840;
+        }
+
+        .custom-checkbox svg {
+            width: 14px;
+            height: 14px;
+            color: #ffffff;
+            display: none;
+        }
+
+        .remember-input:checked + .custom-checkbox svg {
+            display: block;
+        }
+
+        .remember-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            height: 52px;
+            background-color: #0B2840;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(11, 40, 64, 0.25);
+        }
+
+        .submit-btn:hover {
+            background-color: #143A5D;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(11, 40, 64, 0.35);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2.2;
+        }
+
+        /* Footer */
+        .register-footer {
+            margin-top: 32px;
+            font-size: 14.5px;
+            color: #475569;
+            text-align: center;
+        }
+
+        .register-link {
+            color: #0B2840;
+            font-weight: 700;
+            text-decoration: none;
+            margin-left: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .register-link:hover {
+            color: #143A5D;
+            text-decoration: underline;
+        }
+
+        /* Modal Popup Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 32px 28px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .popup-overlay.active .popup-card {
+            transform: scale(1);
+        }
+
+        .popup-icon-wrapper {
+            width: 64px;
+            height: 64px;
+            background: #dcfce7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px auto;
+        }
+
+        .popup-icon {
+            width: 32px;
+            height: 32px;
+            color: #16a34a;
+        }
+
+        .popup-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .popup-text {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .popup-btn {
+            width: 100%;
+            height: 44px;
+            background: #0B2840;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .popup-btn:hover {
+            background: #143A5D;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 32px 24px;
+                border-radius: 20px;
+            }
+            .title {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header>
+        <div class="header-container">
+            <a href="{% url 'home' %}" class="brand-logo">
+                <div class="logo-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="4" />
+                        <path d="M12 8v8M8 12h8" />
+                    </svg>
+                </div>
+                <span class="brand-name">DIABETES CARE</span>
+            </a>
+
+            <ul class="nav-links">
+                <li class="nav-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item active"><a href="{% url 'user_login' %}">Login</a></li>
+                <li class="nav-item"><a href="{% url 'user_registration' %}" class="btn-register">Register</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Centered Content Wrapper -->
+    <main class="main-wrapper">
+        <div class="login-card">
+
+            <!-- Top Avatar Icon -->
+            <div class="avatar-container">
+                <svg class="avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+
+            <!-- Header -->
+            <h1 class="title">Welcome Back!</h1>
+            <p class="subtitle">Login to continue managing your health</p>
+
+            <!-- Login Form -->
+            <div id="loginErrorMsg" style="display: none; color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; padding: 10px 14px; border-radius: 8px; font-size: 13.5px; font-weight: 600; margin-bottom: 16px; width: 100%; text-align: center;"></div>
+
+            <form class="login-form" id="loginForm" action="{% url 'user_login' %}" method="POST" autocomplete="off">
+                {% csrf_token %}
+
+                <!-- Email Address Field -->
+                <div class="form-group">
+                    <div class="label-row">
+                        <label for="email">Email Address</label>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email" required value="" autocomplete="off">
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <div class="label-row">
+                        <label for="password">Password</label>
+                        <a href="{% url 'forgot_password' %}" class="forgot-link">Forgot Password?</a>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" class="form-input" placeholder="Enter your password" required value="" autocomplete="new-password">
+                        <button type="button" class="toggle-password" id="togglePasswordBtn" aria-label="Toggle password visibility">
+                            <!-- Eye Icon -->
+                            <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <!-- Eye Slash Icon -->
+                            <svg id="eyeSlashIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remember Me Checkbox -->
+                <label class="remember-group">
+                    <input type="checkbox" name="remember_me" class="remember-input" id="rememberMe">
+                    <span class="custom-checkbox">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </span>
+                    <span class="remember-label">Remember me on this device</span>
+                </label>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">
+                    <span>Login</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                        <polyline points="10 17 15 12 10 7"></polyline>
+                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                    </svg>
+                </button>
+            </form>
+
+            <!-- Footer -->
+            <div class="register-footer">
+                Don't have an account? <a href="{% url 'user_registration' %}" class="register-link">Register</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Success Modal Popup -->
+    <div class="popup-overlay" id="successPopup">
+        <div class="popup-card">
+            <div class="popup-icon-wrapper">
+                <svg class="popup-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h3 class="popup-title">Successfully Logged In</h3>
+            <p class="popup-text">Welcome back! Choose an option below to proceed.</p>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 16px;">
+                <button class="popup-btn" id="addProfileBtn" style="width: 100%;">Add Profile</button>
+                <button class="popup-btn" id="homeBtn" style="width: 100%; background: #e2e8f0; color: #1e293b;">Go to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Toggle & Popup Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+            const passwordInput = document.getElementById('password');
+            const emailInput = document.getElementById('email');
+            const eyeIcon = document.getElementById('eyeIcon');
+            const eyeSlashIcon = document.getElementById('eyeSlashIcon');
+            const loginForm = document.getElementById('loginForm');
+            const successPopup = document.getElementById('successPopup');
+            const addProfileBtn = document.getElementById('addProfileBtn');
+            const homeBtn = document.getElementById('homeBtn');
+            const errorMsg = document.getElementById('loginErrorMsg');
+
+            // Clear inputs on page load
+            if (emailInput) emailInput.value = "";
+            if (passwordInput) passwordInput.value = "";
+
+            togglePasswordBtn.addEventListener('click', function () {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+
+                if (type === 'password') {
+                    eyeIcon.style.display = 'block';
+                    eyeSlashIcon.style.display = 'none';
+                } else {
+                    eyeIcon.style.display = 'none';
+                    eyeSlashIcon.style.display = 'block';
+                }
+            });
+
+            if (addProfileBtn) {
+                addProfileBtn.addEventListener('click', function() {
+                    window.location.href = "{% url 'health_record' %}";
+                });
+            }
+
+            if (homeBtn) {
+                homeBtn.addEventListener('click', function() {
+                    window.location.href = "{% url 'home' %}";
+                });
+            }
+
+            loginForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                errorMsg.style.display = 'none';
+                errorMsg.textContent = '';
+
+                const formData = new FormData(loginForm);
+                try {
+                    const response = await fetch("{% url 'user_login' %}", {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        }
+                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        successPopup.classList.add('active');
+                    } else {
+                        errorMsg.textContent = data.message || "Invalid email or password.";
+                        errorMsg.style.display = 'block';
+                    }
+                } catch (err) {
+                    console.error("Login fetch error:", err);
+                    successPopup.classList.add('active');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

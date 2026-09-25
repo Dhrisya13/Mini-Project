@@ -1,0 +1,825 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Recommendation Engine - Diabetes Care</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header Navigation Bar */
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 0;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon-box {
+            width: 38px;
+            height: 38px;
+            background-color: #0B2840;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(11, 40, 64, 0.15);
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0B2840;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            transition: color 0.2s ease;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-item a:hover {
+            color: #0B2840;
+        }
+
+        .nav-item.active a {
+            color: #0B2840;
+            font-weight: 700;
+        }
+
+        .nav-item.active a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background-color: #0B2840;
+            border-radius: 2px;
+        }
+
+        .btn-nav-outline {
+            border: 1.5px solid #0B2840;
+            color: #0B2840 !important;
+            padding: 7px 18px;
+            border-radius: 50px;
+            font-weight: 700 !important;
+            transition: all 0.2s ease;
+        }
+
+        .btn-nav-outline:hover {
+            background-color: #0B2840;
+            color: #ffffff !important;
+        }
+
+        .main-wrapper {
+            flex: 1;
+            padding: 36px 20px 70px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .engine-container {
+            width: 100%;
+            max-width: 1150px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* Hero Header Banner Card */
+        .hero-banner {
+            background: linear-gradient(135deg, #0B2840 0%, #1e3a8a 100%);
+            color: #ffffff;
+            border-radius: 24px;
+            padding: 36px 40px;
+            box-shadow: 0 12px 32px rgba(11, 40, 64, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .hero-title-group h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hero-title-group p {
+            font-size: 14.5px;
+            color: #cbd5e1;
+            font-weight: 500;
+            max-width: 620px;
+            line-height: 1.5;
+        }
+
+        .score-circle-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: 20px 28px;
+            text-align: center;
+            min-width: 180px;
+        }
+
+        .score-num {
+            font-size: 38px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #93c5fd;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* Simulator Card */
+        .simulator-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            padding: 24px 28px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+        }
+
+        .simulator-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .simulator-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0B2840;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sim-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .sim-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .sim-input-group label {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #475569;
+        }
+
+        .sim-input {
+            width: 100%;
+            height: 42px;
+            padding: 0 14px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .sim-input:focus {
+            border-color: #0B2840;
+            box-shadow: 0 0 0 3px rgba(11, 40, 64, 0.1);
+        }
+
+        .btn-sim-reset {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-sim-reset:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        /* Pillars Section & Grid */
+        .pillar-header {
+            font-size: 20px;
+            font-weight: 800;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .pillar-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            padding: 28px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.2s ease;
+        }
+
+        .pillar-card:hover {
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.07);
+            border-color: #cbd5e1;
+        }
+
+        .pillar-title-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .pillar-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .bg-emerald { background: #dcfce7; color: #15803d; }
+        .bg-blue { background: #e0f2fe; color: #0284c7; }
+        .bg-purple { background: #f3e8ff; color: #9333ea; }
+        .bg-amber { background: #fef3c7; color: #d97706; }
+
+        .pillar-title-box h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .pillar-title-box p {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            flex: 1;
+        }
+
+        .tip-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 18px;
+        }
+
+        .tip-item-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #0B2840;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tip-item-desc {
+            font-size: 13.5px;
+            color: #334155;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* Urgent Medical Alert Box */
+        .doctor-alert-banner {
+            background-color: #fef2f2;
+            border: 2px solid #ef4444;
+            border-radius: 16px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.1);
+        }
+
+        .doctor-alert-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .doctor-alert-content svg {
+            color: #dc2626;
+            flex-shrink: 0;
+        }
+
+        .doctor-alert-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #991b1b;
+        }
+
+        .doctor-alert-text {
+            font-size: 13.5px;
+            color: #b91c1c;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Action Toolbar Footer */
+        .action-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px 28px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .btn-action-primary {
+            background: #0B2840;
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(11, 40, 64, 0.2);
+        }
+
+        .btn-action-primary:hover {
+            background: #143A5D;
+            transform: translateY(-1px);
+        }
+
+        .btn-action-outline {
+            background: #ffffff;
+            color: #475569;
+            border: 1.5px solid #cbd5e1;
+            padding: 11px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-outline:hover {
+            border-color: #0B2840;
+            color: #0B2840;
+            background: #f8fafc;
+        }
+
+        @media (max-width: 992px) {
+            .pillars-grid {
+                grid-template-columns: 1fr;
+            }
+            .sim-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sim-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-banner {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 28px;
+            }
+            .doctor-alert-banner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media print {
+            header, .simulator-card, .action-toolbar, .btn-sim-reset {
+                display: none !important;
+            }
+            body {
+                background: white;
+            }
+            .hero-banner {
+                background: #0B2840 !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="header-container">
+            <a href="{% url 'home' %}" class="brand-logo">
+                <div class="logo-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="4" />
+                        <path d="M12 8v8M8 12h8" />
+                    </svg>
+                </div>
+                <span class="brand-name">DIABETES CARE</span>
+            </a>
+
+            <ul class="nav-links">
+                <li class="nav-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a href="{% url 'predict_risk' %}">Risk Prediction</a></li>
+                <li class="nav-item"><a href="{% url 'view_prediction' %}">View Report</a></li>
+                <li class="nav-item"><a href="{% url 'prediction_history' %}">Database Tracking</a></li>
+                <li class="nav-item active"><a href="{% url 'recommendation_engine' %}">Recommendation Engine</a></li>
+                <li class="nav-item"><a href="{% url 'analytics_dashboard' %}">Analytics Dashboard</a></li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a href="{% url 'health_record' %}">Health Record</a></li>
+                    <li class="nav-item"><a href="{% url 'view_profile' %}">Profile</a></li>
+                    <li class="nav-item"><a href="{% url 'user_logout' %}" class="btn-nav-outline">Logout</a></li>
+                {% else %}
+                    <li class="nav-item"><a href="{% url 'user_login' %}" class="btn-nav-outline">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </header>
+
+    <div class="main-wrapper">
+        <div class="engine-container">
+
+            <!-- Hero Banner Card -->
+            <div class="hero-banner">
+                <div class="hero-title-group">
+                    <h1>
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                        </svg>
+                        Automated Clinical Recommendation Engine
+                    </h1>
+                    <p>Algorithmically generated, personalized health guidance based on your clinical vitals, glucose readings, blood pressure, BMI, and lifestyle factors. Tailored to prevent diabetes progression and optimize metabolic wellness.</p>
+                </div>
+                <div class="score-circle-card">
+                    <div class="score-num" id="displayScore">{{ wellness_score }}%</div>
+                    <div class="score-label">Wellness Score</div>
+                </div>
+            </div>
+
+            {% if "high" in risk_level|lower %}
+                <!-- Doctor Urgent Advisory Banner -->
+                <div class="doctor-alert-banner">
+                    <div class="doctor-alert-content">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <div>
+                            <div class="doctor-alert-title">URGENT CLINICAL MEDICAL ADVISORY</div>
+                            <div class="doctor-alert-text">🚨 Your clinical metrics indicate High Risk. You have to see a doctor immediately for a comprehensive diabetes checkup and professional consultation.</div>
+                        </div>
+                    </div>
+                    <a href="{% url 'view_prediction' %}" class="btn-action-primary" style="background: #dc2626; padding: 9px 18px; font-size: 13.5px; white-space: nowrap;">View Report →</a>
+                </div>
+            {% endif %}
+
+            <!-- Interactive Vitals Simulator & Real-time Re-evaluator -->
+            <div class="simulator-card">
+                <div class="simulator-header">
+                    <div class="simulator-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        Interactive Clinical Parameters & Real-Time Tips Simulator
+                    </div>
+                    <button type="button" class="btn-sim-reset" id="resetSimBtn">↺ Reset to My Saved Vitals</button>
+                </div>
+                <div class="sim-grid">
+                    <div class="sim-input-group">
+                        <label for="simGlucose">Glucose Level (mg/dL)</label>
+                        <input type="number" id="simGlucose" class="sim-input" value="{{ glucose|floatformat:0 }}" min="40" max="400">
+                    </div>
+                    <div class="sim-input-group">
+                        <label for="simSystolic">Systolic BP (mmHg)</label>
+                        <input type="number" id="simSystolic" class="sim-input" value="{{ systolic_bp }}" min="50" max="240">
+                    </div>
+                    <div class="sim-input-group">
+                        <label for="simDiastolic">Diastolic BP (mmHg)</label>
+                        <input type="number" id="simDiastolic" class="sim-input" value="{{ diastolic_bp }}" min="30" max="150">
+                    </div>
+                    <div class="sim-input-group">
+                        <label for="simBmi">BMI Score (kg/m²)</label>
+                        <input type="number" id="simBmi" step="0.1" class="sim-input" value="{{ bmi_val }}" min="10" max="60">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4 Clinical Pillars Section Header -->
+            <div class="pillar-header">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B2840" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                4 Tailored Clinical Prevention Pillars
+            </div>
+
+            <!-- Pillars Grid -->
+            <div class="pillars-grid">
+
+                <!-- Pillar 1: Dietary Plan & Nutrition -->
+                <div class="pillar-card">
+                    <div class="pillar-title-box">
+                        <div class="pillar-icon-box bg-emerald">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        </div>
+                        <div>
+                            <h3>🥗 Tailored Dietary Plan & Nutrition</h3>
+                            <p>Glycemic control, carbohydrate goals & meal timing</p>
+                        </div>
+                    </div>
+                    <div class="tips-list" id="dietTipsContainer">
+                        {% for tip in dietary_tips %}
+                            <div class="tip-item">
+                                <div class="tip-item-title">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    {{ tip.title }}
+                                </div>
+                                <div class="tip-item-desc">{{ tip.desc }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Pillar 2: Physical Activity & Exercise -->
+                <div class="pillar-card">
+                    <div class="pillar-title-box">
+                        <div class="pillar-icon-box bg-blue">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        </div>
+                        <div>
+                            <h3>🏃 Physical Activity & Fitness Protocol</h3>
+                            <p>Aerobic conditioning, post-meal walks & strength</p>
+                        </div>
+                    </div>
+                    <div class="tips-list" id="activityTipsContainer">
+                        {% for tip in activity_tips %}
+                            <div class="tip-item">
+                                <div class="tip-item-title">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    {{ tip.title }}
+                                </div>
+                                <div class="tip-item-desc">{{ tip.desc }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Pillar 3: Lifestyle Habits & Wellness -->
+                <div class="pillar-card">
+                    <div class="pillar-title-box">
+                        <div class="pillar-icon-box bg-purple">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 15 15"/></svg>
+                        </div>
+                        <div>
+                            <h3>🧘 Lifestyle Habits & Wellness</h3>
+                            <p>Sleep duration, hydration targets & smoke-free care</p>
+                        </div>
+                    </div>
+                    <div class="tips-list" id="lifestyleTipsContainer">
+                        {% for tip in lifestyle_tips %}
+                            <div class="tip-item">
+                                <div class="tip-item-title">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    {{ tip.title }}
+                                </div>
+                                <div class="tip-item-desc">{{ tip.desc }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Pillar 4: Preventive Care & Screenings -->
+                <div class="pillar-card">
+                    <div class="pillar-title-box">
+                        <div class="pillar-icon-box bg-amber">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <div>
+                            <h3>🛡️ Preventive Care & Clinical Checklist</h3>
+                            <p>HbA1c schedule, eye & foot exams, renal profiling</p>
+                        </div>
+                    </div>
+                    <div class="tips-list" id="preventiveTipsContainer">
+                        {% for tip in preventive_tips %}
+                            <div class="tip-item">
+                                <div class="tip-item-title">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                    {{ tip.title }}
+                                </div>
+                                <div class="tip-item-desc">{{ tip.desc }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Action Toolbar Footer -->
+            <div class="action-toolbar">
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <button type="button" class="btn-action-primary" onclick="window.print()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                        Print / Save Health Plan
+                    </button>
+                    <a href="{% url 'predict_risk' %}" class="btn-action-outline">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        New Risk Assessment
+                    </a>
+                </div>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <a href="{% url 'view_prediction' %}" class="btn-action-outline">View Prediction Report</a>
+                    <a href="{% url 'prediction_history' %}" class="btn-action-outline">Database Log →</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Real-Time Interactive Simulator Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const simGlucose = document.getElementById('simGlucose');
+            const simSystolic = document.getElementById('simSystolic');
+            const simDiastolic = document.getElementById('simDiastolic');
+            const simBmi = document.getElementById('simBmi');
+            const resetSimBtn = document.getElementById('resetSimBtn');
+            const displayScore = document.getElementById('displayScore');
+
+            const savedGlucose = parseFloat("{{ glucose|floatformat:0 }}") || 100;
+            const savedSys = parseFloat("{{ systolic_bp }}") || 115;
+            const savedDia = parseFloat("{{ diastolic_bp }}") || 75;
+            const savedBmi = parseFloat("{{ bmi_val }}") || 22;
+
+            function reevaluateRecommendations() {
+                const glucose = parseFloat(simGlucose.value) || 100;
+                const sys = parseFloat(simSystolic.value) || 115;
+                const dia = parseFloat(simDiastolic.value) || 75;
+                const bmi = parseFloat(simBmi.value) || 22;
+
+                // Dynamic Wellness Score Calculation
+                let score = 92;
+                if (glucose >= 200) score -= 35;
+                else if (glucose >= 126) score -= 22;
+                else if (glucose >= 100) score -= 12;
+
+                if (sys >= 140 || dia >= 90) score -= 18;
+                else if (sys >= 130 || dia >= 80) score -= 10;
+
+                if (bmi >= 30) score -= 15;
+                else if (bmi >= 25) score -= 8;
+
+                score = Math.max(35, Math.min(98, score));
+                displayScore.innerText = score + '%';
+
+                // Re-evaluate Dietary Tips
+                const dietContainer = document.getElementById('dietTipsContainer');
+                let dietHTML = '';
+                if (glucose >= 200) {
+                    dietHTML = `
+                        <div class="tip-item"><div class="tip-item-title">⚡ Strict Glycemic Control</div><div class="tip-item-desc">Eliminate refined sugars and white flour completely. Focus on non-starchy vegetables.</div></div>
+                        <div class="tip-item"><div class="tip-item-title">⚡ Net Carb Restriction</div><div class="tip-item-desc">Limit daily net carbs to under 50-70g per day split across structured meals.</div></div>
+                        <div class="tip-item"><div class="tip-item-title">⚡ Lean Protein Options</div><div class="tip-item-desc">Incorporate fish, skinless chicken, tofu, and egg whites to stabilize insulin.</div></div>`;
+                } else if (glucose >= 126) {
+                    dietHTML = `
+                        <div class="tip-item"><div class="tip-item-title">🥗 Controlled Carbohydrate Intake</div><div class="tip-item-desc">Replace white rice and bread with quinoa, oats, brown rice, and lentils.</div></div>
+                        <div class="tip-item"><div class="tip-item-title">🥗 Fiber Rich Goal</div><div class="tip-item-desc">Aim for 30-35g of daily fiber (chia seeds, flaxseeds, broccoli, spinach).</div></div>
+                        <div class="tip-item"><div class="tip-item-title">🥗 50-25-25 Plate Rule</div><div class="tip-item-desc">50% non-starchy vegetables, 25% lean protein, and 25% whole grains.</div></div>`;
+                } else {
+                    dietHTML = `
+                        <div class="tip-item"><div class="tip-item-title">✅ Optimal Glycemic Maintenance</div><div class="tip-item-desc">Continue eating a Mediterranean whole-food diet low in refined sugars.</div></div>
+                        <div class="tip-item"><div class="tip-item-title">✅ Antioxidant Protection</div><div class="tip-item-desc">Include blueberries, leafy greens, berries, and turmeric for cellular health.</div></div>`;
+                }
+                dietContainer.innerHTML = dietHTML;
+
+                // Re-evaluate Physical Activity Tips
+                const actContainer = document.getElementById('activityTipsContainer');
+                let actHTML = '';
+                if (bmi >= 30 || glucose >= 140) {
+                    actHTML = `
+                        <div class="tip-item"><div class="tip-item-title">🏃 Daily Structured Exercise</div><div class="tip-item-desc">45 minutes of daily brisk walking, stationary cycling, or water aerobics.</div></div>
+                        <div class="tip-item"><div class="tip-item-title">🏃 Post-Meal Walk Protocol</div><div class="tip-item-desc">Take a 10-15 minute walk within 30 minutes after meals to clear glucose.</div></div>`;
+                } else {
+                    actHTML = `
+                        <div class="tip-item"><div class="tip-item-title">✅ Aerobic Conditioning</div><div class="tip-item-desc">150 minutes of brisk walking or active cycling per week.</div></div>
+                        <div class="tip-item"><div class="tip-item-title">✅ Target Step Goal</div><div class="tip-item-desc">Target 9,000 to 10,000 steps daily using a fitness tracker.</div></div>`;
+                }
+                actContainer.innerHTML = actHTML;
+            }
+
+            [simGlucose, simSystolic, simDiastolic, simBmi].forEach(input => {
+                if (input) input.addEventListener('input', reevaluateRecommendations);
+            });
+
+            resetSimBtn.addEventListener('click', function() {
+                simGlucose.value = savedGlucose;
+                simSystolic.value = savedSys;
+                simDiastolic.value = savedDia;
+                simBmi.value = savedBmi;
+                reevaluateRecommendations();
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1741 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Diet & Clinical Recommendation Engine - Diabetes Care</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header Navigation Bar */
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 0;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon-box {
+            width: 38px;
+            height: 38px;
+            background-color: #0B2840;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(11, 40, 64, 0.15);
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0B2840;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            transition: color 0.2s ease;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-item a:hover {
+            color: #0B2840;
+        }
+
+        .nav-item.active a {
+            color: #0B2840;
+            font-weight: 700;
+        }
+
+        .nav-item.active a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background-color: #0B2840;
+            border-radius: 2px;
+        }
+
+        .btn-nav-outline {
+            border: 1.5px solid #0B2840;
+            color: #0B2840 !important;
+            padding: 7px 18px;
+            border-radius: 50px;
+            font-weight: 700 !important;
+            transition: all 0.2s ease;
+        }
+
+        .btn-nav-outline:hover {
+            background-color: #0B2840;
+            color: #ffffff !important;
+        }
+
+        .main-wrapper {
+            flex: 1;
+            padding: 32px 20px 70px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .engine-container {
+            width: 100%;
+            max-width: 1240px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Hero Header Banner Card */
+        .hero-banner {
+            background: linear-gradient(135deg, #0B2840 0%, #1e3a8a 100%);
+            color: #ffffff;
+            border-radius: 24px;
+            padding: 32px 40px;
+            box-shadow: 0 12px 32px rgba(11, 40, 64, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .hero-title-group h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hero-title-group p {
+            font-size: 14.5px;
+            color: #cbd5e1;
+            font-weight: 500;
+            max-width: 680px;
+            line-height: 1.5;
+        }
+
+        .score-circle-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 20px;
+            padding: 20px 28px;
+            text-align: center;
+            min-width: 180px;
+        }
+
+        .score-num {
+            font-size: 38px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #93c5fd;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* Urgent Medical Alert Box */
+        .doctor-alert-banner {
+            background-color: #fef2f2;
+            border: 2px solid #ef4444;
+            border-radius: 16px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.1);
+        }
+
+        .doctor-alert-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .doctor-alert-content svg {
+            color: #dc2626;
+            flex-shrink: 0;
+        }
+
+        .doctor-alert-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #991b1b;
+        }
+
+        .doctor-alert-text {
+            font-size: 13.5px;
+            color: #b91c1c;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Main Feature Tab Navigation */
+        .main-tab-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: #0B2840;
+            background: #f1f5f9;
+        }
+
+        .tab-btn.active {
+            background: #0B2840;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(11, 40, 64, 0.15);
+        }
+
+        /* Tab Content Section */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card Container Styles */
+        .interactive-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            padding: 28px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+            margin-bottom: 24px;
+        }
+
+        .card-header-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #0B2840;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-subtitle {
+            font-size: 13.5px;
+            color: #64748b;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        /* Form Controls */
+        .form-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .custom-select, .custom-input {
+            width: 100%;
+            height: 44px;
+            padding: 0 14px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            outline: none;
+            background: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .custom-select:focus, .custom-input:focus {
+            border-color: #0B2840;
+            box-shadow: 0 0 0 3px rgba(11, 40, 64, 0.1);
+        }
+
+        /* Day Selector Pills */
+        .day-pills {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            margin-top: 16px;
+        }
+
+        .day-pill {
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .day-pill:hover {
+            border-color: #0B2840;
+            color: #0B2840;
+        }
+
+        .day-pill.active {
+            background: #0B2840;
+            color: #ffffff;
+            border-color: #0B2840;
+        }
+
+        /* Meal Plan Grid */
+        .meal-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .meal-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .meal-card:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+            background: #ffffff;
+        }
+
+        .meal-time-tag {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .meal-time-label {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #0284c7;
+            background: #e0f2fe;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .gi-badge {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .gi-low {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .gi-med {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .gi-high {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .meal-name {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .meal-desc {
+            font-size: 13.5px;
+            color: #475569;
+            line-height: 1.45;
+        }
+
+        .meal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .meal-cal {
+            font-size: 13px;
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        .btn-swap-meal {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #0B2840;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-swap-meal:hover {
+            background: #0B2840;
+            color: #ffffff;
+            border-color: #0B2840;
+        }
+
+        /* Food GI Checker Table & Search */
+        .search-box-wrap {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 48px;
+            padding: 0 16px 0 46px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: #0B2840;
+            box-shadow: 0 0 0 3.5px rgba(11, 40, 64, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .food-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .food-table th {
+            background: #f1f5f9;
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 800;
+            color: #334155;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .food-table td {
+            padding: 14px 16px;
+            font-size: 13.5px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .food-table tr:hover td {
+            background: #f8fafc;
+        }
+
+        /* Daily Habit Checklist Section */
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .check-item {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .check-item:hover {
+            border-color: #0B2840;
+            background: #ffffff;
+        }
+
+        .check-item.completed {
+            background: #f0fdf4;
+            border-color: #86efac;
+        }
+
+        .check-checkbox {
+            width: 22px;
+            height: 22px;
+            accent-color: #16a34a;
+            cursor: pointer;
+            margin-top: 2px;
+        }
+
+        .check-info {
+            flex: 1;
+        }
+
+        .check-title {
+            font-size: 14.5px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .check-desc {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .progress-banner {
+            background: #f1f5f9;
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            gap: 16px;
+        }
+
+        .progress-bar-bg {
+            flex: 1;
+            height: 12px;
+            background: #cbd5e1;
+            border-radius: 50px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #16a34a 0%, #22c55e 100%);
+            width: 0%;
+            transition: width 0.4s ease;
+            border-radius: 50px;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            font-weight: 800;
+            color: #15803d;
+            white-space: nowrap;
+        }
+
+        /* Hydration Water Counter Widget */
+        .water-counter-card {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            border: 1px solid #7dd3fc;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .water-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #0369a1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .water-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-water {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: #0284c7;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-water:hover {
+            background: #0369a1;
+            transform: scale(1.05);
+        }
+
+        .water-count-display {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0c4a6e;
+            min-width: 100px;
+            text-align: center;
+        }
+
+
+
+        /* Pillars Section Grid */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .pillar-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.2s ease;
+        }
+
+        .pillar-card:hover {
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.07);
+            border-color: #cbd5e1;
+        }
+
+        .pillar-title-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 14px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .pillar-icon-box {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .bg-emerald { background: #dcfce7; color: #15803d; }
+        .bg-blue { background: #e0f2fe; color: #0284c7; }
+        .bg-purple { background: #f3e8ff; color: #9333ea; }
+        .bg-amber { background: #fef3c7; color: #d97706; }
+
+        .pillar-title-box h3 {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .pillar-title-box p {
+            font-size: 12.5px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .tip-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 16px;
+        }
+
+        .tip-item-title {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #0B2840;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tip-item-desc {
+            font-size: 13px;
+            color: #334155;
+            line-height: 1.45;
+            font-weight: 500;
+        }
+
+        /* Action Toolbar Footer */
+        .action-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px 28px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .btn-action-primary {
+            background: #0B2840;
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(11, 40, 64, 0.2);
+        }
+
+        .btn-action-primary:hover {
+            background: #143A5D;
+            transform: translateY(-1px);
+        }
+
+        .btn-action-outline {
+            background: #ffffff;
+            color: #475569;
+            border: 1.5px solid #cbd5e1;
+            padding: 11px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-outline:hover {
+            border-color: #0B2840;
+            color: #0B2840;
+            background: #f8fafc;
+        }
+
+        /* Swap Modal styling */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 520px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.25s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0B2840;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 22px;
+            color: #64748b;
+            cursor: pointer;
+        }
+
+        .swap-options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .swap-option-btn {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .swap-option-btn:hover {
+            border-color: #0B2840;
+            background: #f1f5f9;
+        }
+
+        @media (max-width: 992px) {
+            .pillars-grid, .meal-grid, .form-grid-3, .checklist-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            header, .main-tab-nav, .action-toolbar, .btn-swap-meal {
+                display: none !important;
+            }
+            body { background: white; }
+            .hero-banner { background: #0B2840 !important; color: white !important; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="header-container">
+            <a href="{% url 'home' %}" class="brand-logo">
+                <div class="logo-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="4" />
+                        <path d="M12 8v8M8 12h8" />
+                    </svg>
+                </div>
+                <span class="brand-name">DIABETES CARE</span>
+            </a>
+
+            <ul class="nav-links">
+                <li class="nav-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a href="{% url 'predict_risk' %}">Risk Prediction</a></li>
+                <li class="nav-item"><a href="{% url 'view_prediction' %}">View Report</a></li>
+                <li class="nav-item"><a href="{% url 'prediction_history' %}">Database Tracking</a></li>
+                <li class="nav-item active"><a href="{% url 'recommendation_engine' %}">Recommendation Engine</a></li>
+                <li class="nav-item"><a href="{% url 'analytics_dashboard' %}">Analytics Dashboard</a></li>
+                {% if user.is_authenticated %}
+                <li class="nav-item"><a href="{% url 'health_record' %}">Health Record</a></li>
+                <li class="nav-item"><a href="{% url 'view_profile' %}">Profile</a></li>
+                <li class="nav-item"><a href="{% url 'user_logout' %}" class="btn-nav-outline">Logout</a></li>
+                {% else %}
+                <li class="nav-item"><a href="{% url 'user_login' %}" class="btn-nav-outline">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </header>
+
+    <div class="main-wrapper">
+        <div class="engine-container">
+
+            <!-- Hero Banner Card -->
+            <div class="hero-banner">
+                <div class="hero-title-group">
+                    <h1>
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
+                        </svg>
+                        Interactive Clinical Diet & Recommendation Engine
+                    </h1>
+                    <p>Algorithmically personalized interactive diet planning, real-time food Glycemic Index checking, daily meal tracking, and interactive clinical guidance based on your blood sugar, BMI, and lifestyle.</p>
+                </div>
+                <div class="score-circle-card">
+                    <div class="score-num" id="displayScore">{{ wellness_score }}%</div>
+                    <div class="score-label">Wellness Score</div>
+                </div>
+            </div>
+
+            {% if "high" in risk_level|lower %}
+            <!-- Doctor Urgent Advisory Banner -->
+            <div class="doctor-alert-banner">
+                <div class="doctor-alert-content">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                    <div>
+                        <div class="doctor-alert-title">URGENT CLINICAL MEDICAL ADVISORY</div>
+                        <div class="doctor-alert-text">🚨 Your clinical metrics indicate High Risk. Please consult a doctor immediately for a comprehensive diabetes checkup and professional consultation.</div>
+                    </div>
+                </div>
+                <a href="{% url 'view_prediction' %}" class="btn-action-primary"
+                    style="background: #dc2626; padding: 9px 18px; font-size: 13.5px; white-space: nowrap;">View Report →</a>
+            </div>
+            {% endif %}
+
+            <!-- Interactive Main Navigation Tabs -->
+            <div class="main-tab-nav">
+                <button class="tab-btn active" onclick="switchTab('diet-planner-tab', this)">
+                    🥗 Interactive Diet Planner
+                </button>
+                <button class="tab-btn" onclick="switchTab('gi-checker-tab', this)">
+                    🔍 Food Glycemic Checker
+                </button>
+                <button class="tab-btn" onclick="switchTab('daily-tracker-tab', this)">
+                    📋 Daily Meal & Habit Tracker
+                </button>
+                <button class="tab-btn" onclick="switchTab('vitals-pillars-tab', this)">
+                    ⚙️ Vitals & Clinical Pillars
+                </button>
+            </div>
+
+            <!-- ================= TAB 1: INTERACTIVE DIET PLANNER ================= -->
+            <div id="diet-planner-tab" class="tab-content active">
+                <div class="interactive-card">
+                    <div class="card-header-flex">
+                        <div>
+                            <div class="card-title">
+                                🥗 Customized Interactive 7-Day Diabetes Meal Plan
+                            </div>
+                            <div class="card-subtitle">Select your preferences below to dynamically generate and customize your meal routine. You can swap any meal in real time!</div>
+                        </div>
+                    </div>
+
+                    <!-- Customizer Filters -->
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label for="dietPreference">Dietary Preference</label>
+                            <select id="dietPreference" class="custom-select" onchange="generateDietPlan()">
+                                <option value="veg">Vegetarian (Balanced Low GI)</option>
+                                <option value="nonveg" selected>Non-Vegetarian (Lean Protein)</option>
+                                <option value="vegan">Plant-Based / Vegan</option>
+                                <option value="southindian">South Indian Low-Carb</option>
+                                <option value="northindian">North Indian High-Fiber</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dietGoal">Health Objective</label>
+                            <select id="dietGoal" class="custom-select" onchange="generateDietPlan()">
+                                <option value="glucose_control">Prevent Blood Sugar Spikes</option>
+                                <option value="weight_loss">Weight Loss & Fat Reduction</option>
+                                <option value="hba1c_lower">Lower HbA1c Levels (<6.5%)</option>
+                                <option value="maintain">Sustain Energy & Metabolic Health</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="calorieTarget">Daily Calorie Target</label>
+                            <select id="calorieTarget" class="custom-select" onchange="generateDietPlan()">
+                                <option value="1400">1,400 kcal (Weight Loss Target)</option>
+                                <option value="1600" selected>1,600 kcal (Standard Diabetic Target)</option>
+                                <option value="1800">1,800 kcal (Active Lifestyle)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Day Tabs Selector -->
+                    <div class="day-pills">
+                        <button class="day-pill active" onclick="selectDay('Monday', this)">Monday</button>
+                        <button class="day-pill" onclick="selectDay('Tuesday', this)">Tuesday</button>
+                        <button class="day-pill" onclick="selectDay('Wednesday', this)">Wednesday</button>
+                        <button class="day-pill" onclick="selectDay('Thursday', this)">Thursday</button>
+                        <button class="day-pill" onclick="selectDay('Friday', this)">Friday</button>
+                        <button class="day-pill" onclick="selectDay('Saturday', this)">Saturday</button>
+                        <button class="day-pill" onclick="selectDay('Sunday', this)">Sunday</button>
+                    </div>
+
+                    <!-- Meal Plan Display Grid -->
+                    <div class="meal-grid" id="mealPlanContainer">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB 2: FOOD GI CHECKER ================= -->
+            <div id="gi-checker-tab" class="tab-content">
+                <div class="interactive-card">
+                    <div class="card-header-flex">
+                        <div>
+                            <div class="card-title">
+                                🔍 Food Glycemic Index (GI) & Diabetes Safety Checker
+                            </div>
+                            <div class="card-subtitle">Type any food item to check its Glycemic Index, Glycemic Load, diabetes safety rating, and healthier low-GI alternatives.</div>
+                        </div>
+                    </div>
+
+                    <div class="search-box-wrap">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="foodSearchInput" class="search-input" placeholder="Search foods (e.g., White Rice, Oats, Apple, Mango, Eggs, Paneer, Pizza, Almonds)..." onkeyup="filterFoodTable()">
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table class="food-table">
+                            <thead>
+                                <tr>
+                                    <th>Food Item</th>
+                                    <th>GI Rating</th>
+                                    <th>Glycemic Load (GL)</th>
+                                    <th>Diabetes Safety Status</th>
+                                    <th>Recommended Healthy Swap</th>
+                                </tr>
+                            </thead>
+                            <tbody id="foodTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB 3: DAILY MEAL & HABIT TRACKER ================= -->
+            <div id="daily-tracker-tab" class="tab-content">
+                <div class="interactive-card">
+                    <div class="card-header-flex">
+                        <div>
+                            <div class="card-title">
+                                📋 Interactive Daily Diabetes Routine & Meal Checklist
+                            </div>
+                            <div class="card-subtitle">Mark off your daily dietary goals and habits as you complete them throughout the day. Your progress saves automatically!</div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-banner">
+                        <div style="min-width: 140px; font-size: 14px; font-weight: 800; color: #0f172a;">
+                            Today's Adherence:
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" id="checklistProgressFill"></div>
+                        </div>
+                        <div class="progress-text" id="checklistProgressText">0% Done</div>
+                    </div>
+
+                    <!-- Checklist Items -->
+                    <div class="checklist-grid" id="checklistContainer">
+                        <div class="check-item" onclick="toggleCheckItem(this, 'c1')">
+                            <input type="checkbox" class="check-checkbox" id="c1" onclick="event.stopPropagation(); updateChecklistProgress();">
+                            <div class="check-info">
+                                <div class="check-title">🌅 Warm Lemon & Methi Water</div>
+                                <div class="check-desc">Drink 1 glass of room-temperature water with soaked fenugreek (methi) or lemon on an empty stomach.</div>
+                            </div>
+                        </div>
+
+                        <div class="check-item" onclick="toggleCheckItem(this, 'c2')">
+                            <input type="checkbox" class="check-checkbox" id="c2" onclick="event.stopPropagation(); updateChecklistProgress();">
+                            <div class="check-info">
+                                <div class="check-title">🍳 Low GI Balanced Breakfast</div>
+                                <div class="check-desc">Consumed protein-rich breakfast (e.g., Oats, Vegetable Moong Dal Chilla, or Egg Whites with spinach).</div>
+                            </div>
+                        </div>
+
+                        <div class="check-item" onclick="toggleCheckItem(this, 'c3')">
+                            <input type="checkbox" class="check-checkbox" id="c3" onclick="event.stopPropagation(); updateChecklistProgress();">
+                            <div class="check-info">
+                                <div class="check-title">🥗 High Fiber Lunch & Salad</div>
+                                <div class="check-desc">Ate a large plate of fresh salad (cucumber, carrots) before starting main lunch (Brown Rice/Roti + Dal/Tofu).</div>
+                            </div>
+                        </div>
+
+                        <div class="check-item" onclick="toggleCheckItem(this, 'c4')">
+                            <input type="checkbox" class="check-checkbox" id="c4" onclick="event.stopPropagation(); updateChecklistProgress();">
+                            <div class="check-info">
+                                <div class="check-title">🚶 15-Minute Post-Meal Walk</div>
+                                <div class="check-desc">Took a gentle 15-minute walk within 30 minutes after lunch or dinner to reduce blood sugar spikes.</div>
+                            </div>
+                        </div>
+
+                        <div class="check-item" onclick="toggleCheckItem(this, 'c5')">
+                            <input type="checkbox" class="check-checkbox" id="c5" onclick="event.stopPropagation(); updateChecklistProgress();">
+                            <div class="check-info">
+                                <div class="check-title">🍵 Green Tea & Handful of Nuts</div>
+                                <div class="check-desc">Unsweetened green tea or cinnamon tea with 5-6 almonds and 2 walnuts for evening energy.</div>
+                            </div>
+                        </div>
+
+                        <div class="check-item" onclick="toggleCheckItem(this, 'c6')">
+                            <input type="checkbox" class="check-checkbox" id="c6" onclick="event.stopPropagation(); updateChecklistProgress();">
+                            <div class="check-info">
+                                <div class="check-title">🥣 Light Early Dinner (Before 8 PM)</div>
+                                <div class="check-desc">Ate a light dinner at least 2.5 hours before sleeping to maintain steady nocturnal blood glucose.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Water Tracker Widget -->
+                    <div class="water-counter-card">
+                        <div class="water-title">
+                            💧 Daily Hydration Tracker (Target: 2.5L / 10 Glasses)
+                        </div>
+                        <div class="water-controls">
+                            <button class="btn-water" onclick="changeWater(-1)">-</button>
+                            <span class="water-count-display" id="waterDisplay">0 / 10 Glasses</span>
+                            <button class="btn-water" onclick="changeWater(1)">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- ================= TAB 5: VITALS SIMULATOR & CLINICAL PILLARS ================= -->
+            <div id="vitals-pillars-tab" class="tab-content">
+                
+                <!-- Interactive Vitals Simulator -->
+                <div class="interactive-card">
+                    <div class="card-header-flex">
+                        <div>
+                            <div class="card-title">
+                                ⚙️ Interactive Clinical Vitals & Real-Time Tips Simulator
+                            </div>
+                            <div class="card-subtitle">Adjust parameters below to see how changes in glucose, blood pressure, or BMI dynamically recalculate your wellness score and clinical tips.</div>
+                        </div>
+                        <button type="button" class="btn-action-outline" id="resetSimBtn" style="padding: 6px 14px; font-size: 13px;">↺ Reset Saved Vitals</button>
+                    </div>
+
+                    <div class="form-grid-3" style="grid-template-columns: repeat(4, 1fr);">
+                        <div class="form-group">
+                            <label for="simGlucose">Glucose Level (mg/dL)</label>
+                            <input type="number" id="simGlucose" class="custom-input" value="{{ glucose|floatformat:0 }}" min="40" max="400">
+                        </div>
+                        <div class="form-group">
+                            <label for="simSystolic">Systolic BP (mmHg)</label>
+                            <input type="number" id="simSystolic" class="custom-input" value="{{ systolic_bp }}" min="50" max="240">
+                        </div>
+                        <div class="form-group">
+                            <label for="simDiastolic">Diastolic BP (mmHg)</label>
+                            <input type="number" id="simDiastolic" class="custom-input" value="{{ diastolic_bp }}" min="30" max="150">
+                        </div>
+                        <div class="form-group">
+                            <label for="simBmi">BMI Score (kg/m²)</label>
+                            <input type="number" id="simBmi" step="0.1" class="custom-input" value="{{ bmi_val }}" min="10" max="60">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4 Clinical Pillars Section Header -->
+                <div style="font-size: 20px; font-weight: 800; color: #0f172a; margin: 10px 0 16px 0; display: flex; align-items: center; gap: 10px;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B2840" stroke-width="2.5">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                    </svg>
+                    4 Core Clinical Prevention Pillars
+                </div>
+
+                <!-- Pillars Grid -->
+                <div class="pillars-grid">
+                    <!-- Pillar 1 -->
+                    <div class="pillar-card">
+                        <div class="pillar-title-box">
+                            <div class="pillar-icon-box bg-emerald">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3>🥗 Dietary Plan & Nutrition Protocol</h3>
+                                <p>Glycemic control, carbohydrate limits & meal structure</p>
+                            </div>
+                        </div>
+                        <div class="tips-list" id="dietTipsContainer">
+                            {% for tip in dietary_tips %}
+                            <div class="tip-item">
+                                <div class="tip-item-title">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                                    {{ tip.title }}
+                                </div>
+                                <div class="tip-item-desc">{{ tip.desc }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Pillar 2 -->
+                    <div class="pillar-card">
+                        <div class="pillar-title-box">
+                            <div class="pillar-icon-box bg-blue">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3>🏃 Physical Activity & Exercise Protocol</h3>
+                                <p>Aerobic conditioning, post-meal walks & strength</p>
+                            </div>
+                        </div>
+                        <div class="tips-list" id="activityTipsContainer">
+                            {% for tip in activity_tips %}
+                            <div class="tip-item">
+                                <div class="tip-item-title">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                                    {{ tip.title }}
+                                </div>
+                                <div class="tip-item-desc">{{ tip.desc }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Pillar 3 -->
+                    <div class="pillar-card">
+                        <div class="pillar-title-box">
+                            <div class="pillar-icon-box bg-purple">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 15 15" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3>🧘 Lifestyle Habits & Sleep Care</h3>
+                                <p>Sleep duration, hydration targets & stress control</p>
+                            </div>
+                        </div>
+                        <div class="tips-list" id="lifestyleTipsContainer">
+                            {% for tip in lifestyle_tips %}
+                            <div class="tip-item">
+                                <div class="tip-item-title">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                                    {{ tip.title }}
+                                </div>
+                                <div class="tip-item-desc">{{ tip.desc }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Pillar 4 -->
+                    <div class="pillar-card">
+                        <div class="pillar-title-box">
+                            <div class="pillar-icon-box bg-amber">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3>🛡️ Preventive Care & Clinical Checklist</h3>
+                                <p>HbA1c schedule, eye & renal screening</p>
+                            </div>
+                        </div>
+                        <div class="tips-list" id="preventiveTipsContainer">
+                            {% for tip in preventive_tips %}
+                            <div class="tip-item">
+                                <div class="tip-item-title">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                                    {{ tip.title }}
+                                </div>
+                                <div class="tip-item-desc">{{ tip.desc }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Toolbar Footer -->
+            <div class="action-toolbar">
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <button type="button" class="btn-action-primary" onclick="window.print()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="6 9 6 2 18 2 18 9" />
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                            <rect x="6" y="14" width="12" height="8" />
+                        </svg>
+                        Print / Save Health & Diet Plan
+                    </button>
+                    <a href="{% url 'predict_risk' %}" class="btn-action-outline">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                        </svg>
+                        New Risk Assessment
+                    </a>
+                </div>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <a href="{% url 'view_prediction' %}" class="btn-action-outline">View Prediction Report</a>
+                    <a href="{% url 'prediction_history' %}" class="btn-action-outline">Database Log →</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MEAL SWAP MODAL -->
+    <div class="modal-overlay" id="swapModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title" id="modalMealTitle">Swap Meal Option</div>
+                <button class="modal-close" onclick="closeSwapModal()">&times;</button>
+            </div>
+            <div style="font-size: 13.5px; color: #64748b;" id="modalMealSubtitle">Select a healthy low-GI alternative to customize your diet plan:</div>
+            <div class="swap-options-list" id="swapOptionsContainer">
+                <!-- Options populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // ================= DIET PLAN DATA ENGINE =================
+        const dietPlans = {
+            nonveg: {
+                Monday: [
+                    { time: 'Breakfast', name: 'Oatmeal with Almonds & Boiled Egg Whites', desc: 'Rolled oats cooked in water with cinnamon, topped with 5 sliced almonds + 2 boiled egg whites.', cal: '320 kcal', gi: 'Low GI (42)', giClass: 'gi-low', type: 'b1' },
+                    { time: 'Lunch', name: 'Grilled Lemon Chicken Breast & Quinoa Salad', desc: '150g skinless chicken breast marinated in olive oil, served with 1 cup cooked quinoa and steamed broccoli.', cal: '480 kcal', gi: 'Low GI (35)', giClass: 'gi-low', type: 'l1' },
+                    { time: 'Evening Snack', name: 'Green Tea & Roasted Chana (Bengal Gram)', desc: '1 cup unsweetened green tea with 30g dry roasted chana.', cal: '130 kcal', gi: 'Low GI (28)', giClass: 'gi-low', type: 's1' },
+                    { time: 'Dinner', name: 'Pan-Seared Salmon / Fish Curry with Brown Rice', desc: '120g grilled fish fillet served with 1/2 cup brown rice and sautéed spinach in garlic.', cal: '420 kcal', gi: 'Low GI (48)', giClass: 'gi-low', type: 'd1' }
+                ],
+                Tuesday: [
+                    { time: 'Breakfast', name: 'Vegetable Omelette with Whole Grain Toast', desc: '2 egg omelette loaded with spinach, tomatoes, bell peppers + 1 slice whole wheat toast.', cal: '340 kcal', gi: 'Low GI (45)', giClass: 'gi-low', type: 'b2' },
+                    { time: 'Lunch', name: 'Turkey or Chicken Wrap with Avocado & Greens', desc: 'Whole wheat / multigrain wrap filled with shredded chicken, fresh lettuce, cucumber, and avocado.', cal: '450 kcal', gi: 'Low GI (40)', giClass: 'gi-low', type: 'l2' },
+                    { time: 'Evening Snack', name: 'Walnuts & Cucumber Slices with Hummus', desc: '4 walnut halves with fresh cucumber sticks dipped in 2 tbsp homemade hummus.', cal: '150 kcal', gi: 'Low GI (20)', giClass: 'gi-low', type: 's2' },
+                    { time: 'Dinner', name: 'Chicken Soup with Clear Vegetables', desc: 'Hearty bowl of chicken stew cooked with celery, carrots, beans, and black pepper.', cal: '380 kcal', gi: 'Low GI (30)', giClass: 'gi-low', type: 'd2' }
+                ],
+                Wednesday: [
+                    { time: 'Breakfast', name: 'Chia Seed Pudding with Berries & Egg Whites', desc: 'Unsweetened almond milk chia seed pudding with blueberries + 2 hard boiled egg whites.', cal: '310 kcal', gi: 'Low GI (38)', giClass: 'gi-low', type: 'b3' },
+                    { time: 'Lunch', name: 'Fish Fillet with Brown Rice & Stir-fry Vegetables', desc: 'Grilled sea bass/cod with 1/2 cup brown rice, zucchini, and green beans.', cal: '460 kcal', gi: 'Low GI (44)', giClass: 'gi-low', type: 'l3' },
+                    { time: 'Evening Snack', name: 'Handful of Almonds & Pumpkin Seeds', desc: '10 raw almonds + 1 tbsp pumpkin seeds.', cal: '140 kcal', gi: 'Low GI (15)', giClass: 'gi-low', type: 's3' },
+                    { time: 'Dinner', name: 'Lean Minced Chicken Patty with Cauliflower Rice', desc: 'Herbed grilled chicken patty served alongside garlic cauliflower rice.', cal: '390 kcal', gi: 'Low GI (25)', giClass: 'gi-low', type: 'd3' }
+                ],
+                Thursday: [
+                    { time: 'Breakfast', name: 'Greek Yogurt with Flaxseeds & Sliced Apple', desc: 'Plain Greek yogurt topped with ground flaxseed and 1/2 green apple.', cal: '300 kcal', gi: 'Low GI (36)', giClass: 'gi-low', type: 'b4' },
+                    { time: 'Lunch', name: 'Grilled Chicken Caesar Salad (No Mayo)', desc: 'Chicken breast over romaine lettuce, olive oil & lemon dressing with parmesan.', cal: '430 kcal', gi: 'Low GI (32)', giClass: 'gi-low', type: 'l4' },
+                    { time: 'Evening Snack', name: 'Boiled Egg Whites with Black Pepper', desc: '2 egg whites seasoned with pink salt and crushed black pepper.', cal: '90 kcal', gi: 'Low GI (0)', giClass: 'gi-low', type: 's4' },
+                    { time: 'Dinner', name: 'Baked White Fish with Asparagus & Quinoa', desc: 'Baked fish fillet with roasted asparagus and 1/2 cup cooked quinoa.', cal: '410 kcal', gi: 'Low GI (38)', giClass: 'gi-low', type: 'd4' }
+                ],
+                Friday: [
+                    { time: 'Breakfast', name: 'Multigrain Roti / Toast with Scrambled Eggs', desc: '2 scrambled egg whites with spinach + 1 small multigrain toast.', cal: '330 kcal', gi: 'Low GI (42)', giClass: 'gi-low', type: 'b5' },
+                    { time: 'Lunch', name: 'Egg Curry with Brown Rice & Cucumber Salad', desc: '2 boiled eggs in tomato-onion gravy with 1/2 cup brown rice.', cal: '470 kcal', gi: 'Low GI (46)', giClass: 'gi-low', type: 'l5' },
+                    { time: 'Evening Snack', name: 'Roasted Fox Nuts (Makhana) & Green Tea', desc: '1 cup roasted makhana in 1 tsp olive oil + unsweetened green tea.', cal: '120 kcal', gi: 'Low GI (35)', giClass: 'gi-low', type: 's5' },
+                    { time: 'Dinner', name: 'Stir-fried Chicken & Vegetables (Broccoli, Peppers)', desc: '150g chicken breast pieces stir-fried with bell peppers and broccoli in olive oil.', cal: '390 kcal', gi: 'Low GI (28)', giClass: 'gi-low', type: 'd5' }
+                ],
+                Saturday: [
+                    { time: 'Breakfast', name: 'Protein Smoothie (Whey/Plant + Almond Milk + Spinach)', desc: 'Blended unsweetened almond milk, 1 scoop protein powder, spinach, and chia seeds.', cal: '280 kcal', gi: 'Low GI (30)', giClass: 'gi-low', type: 'b6' },
+                    { time: 'Lunch', name: 'Grilled Fish Tacos in Whole Wheat Tortilla', desc: 'Grilled tilapia fillet with cabbage slaw in 1 whole wheat tortilla wrap.', cal: '440 kcal', gi: 'Low GI (45)', giClass: 'gi-low', type: 'l6' },
+                    { time: 'Evening Snack', name: 'Sprouted Moong Salad', desc: '1/2 cup sprouted green gram with lemon juice, onion, and tomato.', cal: '110 kcal', gi: 'Low GI (25)', giClass: 'gi-low', type: 's6' },
+                    { time: 'Dinner', name: 'Roast Chicken with Sautéed Green Beans', desc: 'Oven-roasted herb chicken drumstick/breast with steamed green beans.', cal: '420 kcal', gi: 'Low GI (30)', giClass: 'gi-low', type: 'd6' }
+                ],
+                Sunday: [
+                    { time: 'Breakfast', name: 'Avocado Toast with Poached Egg', desc: '1 slice whole grain sourdough bread topped with mashed avocado and 1 poached egg.', cal: '350 kcal', gi: 'Low GI (44)', giClass: 'gi-low', type: 'b7' },
+                    { time: 'Lunch', name: 'Sunday Roast Chicken Breast with Roasted Sweet Potato', desc: 'Grilled chicken with 1/2 medium sweet potato (low GI carbs) and salad.', cal: '480 kcal', gi: 'Medium GI (54)', giClass: 'gi-med', type: 'l7' },
+                    { time: 'Evening Snack', name: 'Greek Yogurt with Cinnamon', desc: '100g Greek yogurt dusted with Ceylon cinnamon powder.', cal: '100 kcal', gi: 'Low GI (20)', giClass: 'gi-low', type: 's7' },
+                    { time: 'Dinner', name: 'Clear Fish Soup & Salad', desc: 'Poached white fish in light herb broth with cucumber and bell pepper salad.', cal: '350 kcal', gi: 'Low GI (25)', giClass: 'gi-low', type: 'd7' }
+                ]
+            },
+            veg: {
+                Monday: [
+                    { time: 'Breakfast', name: 'Vegetable Oats Upma with Peanuts', desc: 'Steel-cut oats cooked with mustard seeds, curry leaves, carrots, green peas, and peanuts.', cal: '310 kcal', gi: 'Low GI (40)', giClass: 'gi-low' },
+                    { time: 'Lunch', name: 'Paneer / Tofu Tikka Salad with Quinoa', desc: '100g low-fat grilled paneer or tofu with 1/2 cup quinoa and mixed green salad.', cal: '460 kcal', gi: 'Low GI (38)', giClass: 'gi-low' },
+                    { time: 'Evening Snack', name: 'Roasted Makhana & Green Tea', desc: '1 cup roasted lotus seeds seasoned with turmeric and black pepper.', cal: '120 kcal', gi: 'Low GI (35)', giClass: 'gi-low' },
+                    { time: 'Dinner', name: 'Dal Tadka (Yellow Lentils) with Cauliflower Rice', desc: '1 bowl protein-rich yellow dal with garlic tadka served over cauliflower rice.', cal: '380 kcal', gi: 'Low GI (32)', giClass: 'gi-low' }
+                ]
+            }
+        };
+
+        // Food GI Database
+        const foodDatabase = [
+            { name: 'White Rice (Boiled)', gi: 73, gl: 29, status: '⚠️ High Risk - Limit Portion', statusClass: 'gi-high', swap: 'Brown Rice / Cauliflower Rice (GI 48)' },
+            { name: 'Whole Wheat Roti / Chapati', gi: 62, gl: 15, status: '🟡 Moderate - Consume in Moderation', statusClass: 'gi-med', swap: 'Multigrain / Missi Roti with Chana Flour' },
+            { name: 'Steel-Cut Oats', gi: 42, gl: 11, status: '🟢 Excellent Diabetes Friendly', statusClass: 'gi-low', swap: 'Top with cinnamon & almonds' },
+            { name: 'Quinoa (Cooked)', gi: 53, gl: 13, status: '🟢 Excellent Fiber & Protein', statusClass: 'gi-low', swap: 'Use as rice replacement' },
+            { name: 'Brown Rice', gi: 50, gl: 16, status: '🟢 Healthy Complex Carb', statusClass: 'gi-low', swap: 'Ideal lunch carb' },
+            { name: 'Apple (Raw with skin)', gi: 36, gl: 6, status: '🟢 Safe Low-GI Fruit', statusClass: 'gi-low', swap: 'Eat whole with skin' },
+            { name: 'Banana (Ripe)', gi: 62, gl: 16, status: '🟡 Moderate - Limit to 1/2', statusClass: 'gi-med', swap: 'Unripe Green Banana / Guava (GI 12)' },
+            { name: 'Mango (Ripe)', gi: 51, gl: 14, status: '🟡 Moderate - Eat small portion', statusClass: 'gi-med', swap: 'Berries (Blueberries/Strawberries GI 25)' },
+            { name: 'Chicken Breast (Grilled)', gi: 0, gl: 0, status: '🟢 Zero GI High Protein', statusClass: 'gi-low', swap: 'Great for blood sugar stabilization' },
+            { name: 'Paneer (Low Fat)', gi: 27, gl: 2, status: '🟢 Excellent Protein & Fat', statusClass: 'gi-low', swap: 'Grill with turmeric & peppers' },
+            { name: 'Boiled Egg Whites', gi: 0, gl: 0, status: '🟢 Zero GI Perfect Snack', statusClass: 'gi-low', swap: 'High satiety protein' },
+            { name: 'Almonds / Walnuts', gi: 15, gl: 1, status: '🟢 Superfood for Insulin Sensitivity', statusClass: 'gi-low', swap: 'Consume 5-8 daily' },
+            { name: 'Pizza (Refined Flour)', gi: 80, gl: 35, status: '⛔ High Risk - Spikes Blood Glucose', statusClass: 'gi-high', swap: 'Cauliflower Base Veggie Pizza' },
+            { name: 'Sugary Carbonated Soda', gi: 90, gl: 40, status: '⛔ Severe Risk - Avoid Completely', statusClass: 'gi-high', swap: 'Sparkling Water with Fresh Lemon / Mint' }
+        ];
+
+        // Meal Swap Alternatives Map
+        const swapAlternatives = [
+            { name: 'Paneer / Tofu Salad', cal: '310 kcal', gi: 'Low GI (32)' },
+            { name: 'Vegetable Moong Dal Chilla', cal: '280 kcal', gi: 'Low GI (35)' },
+            { name: 'Steamed Fish Fillet with Lemon', cal: '340 kcal', gi: 'Low GI (25)' },
+            { name: 'Greek Yogurt Parfait with Chia Seeds', cal: '250 kcal', gi: 'Low GI (30)' },
+            { name: 'Quinoa Vegetable Bowl', cal: '360 kcal', gi: 'Low GI (42)' }
+        ];
+
+        let currentSelectedDay = 'Monday';
+
+        // Initialize Tab Switching
+        function switchTab(tabId, btnElem) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            btnElem.classList.add('active');
+        }
+
+        // Initialize Diet Plan Display
+        function generateDietPlan() {
+            const pref = document.getElementById('dietPreference').value;
+            const selectedPlan = dietPlans[pref] || dietPlans['nonveg'];
+            const dayMeals = selectedPlan[currentSelectedDay] || selectedPlan['Monday'];
+
+            const container = document.getElementById('mealPlanContainer');
+            let html = '';
+
+            dayMeals.forEach((m, idx) => {
+                html += `
+                    <div class="meal-card">
+                        <div class="meal-time-tag">
+                            <span class="meal-time-label">${m.time}</span>
+                            <span class="gi-badge ${m.giClass}">${m.gi}</span>
+                        </div>
+                        <div class="meal-name" id="meal-title-${idx}">${m.name}</div>
+                        <div class="meal-desc" id="meal-desc-${idx}">${m.desc}</div>
+                        <div class="meal-footer">
+                            <span class="meal-cal" id="meal-cal-${idx}">🔥 ${m.cal}</span>
+                            <button type="button" class="btn-swap-meal" onclick="openSwapModal(${idx}, '${m.time}')">
+                                🔄 Swap Meal
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function selectDay(dayName, btnElem) {
+            currentSelectedDay = dayName;
+            document.querySelectorAll('.day-pill').forEach(el => el.classList.remove('active'));
+            btnElem.classList.add('active');
+            generateDietPlan();
+        }
+
+        // Swap Modal Logic
+        let activeMealIdx = 0;
+
+        function openSwapModal(idx, mealTime) {
+            activeMealIdx = idx;
+            document.getElementById('modalMealTitle').innerText = `Swap ${mealTime} Option`;
+            const container = document.getElementById('swapOptionsContainer');
+            let html = '';
+
+            swapAlternatives.forEach(alt => {
+                html += `
+                    <button type="button" class="swap-option-btn" onclick="applySwap('${alt.name}', '${alt.cal}', '${alt.gi}')">
+                        <div style="font-weight: 800; color: #0f172a;">${alt.name}</div>
+                        <div style="font-size: 12.5px; color: #64748b; margin-top: 2px;">🔥 ${alt.cal} &bull; <span class="gi-badge gi-low">${alt.gi}</span></div>
+                    </button>
+                `;
+            });
+            container.innerHTML = html;
+            document.getElementById('swapModal').classList.add('active');
+        }
+
+        function closeSwapModal() {
+            document.getElementById('swapModal').classList.remove('active');
+        }
+
+        function applySwap(name, cal, gi) {
+            document.getElementById(`meal-title-${activeMealIdx}`).innerText = name;
+            document.getElementById(`meal-desc-${activeMealIdx}`).innerText = 'Custom swapped option optimized for low glycemic load and steady glucose.';
+            document.getElementById(`meal-cal-${activeMealIdx}`).innerText = `🔥 ${cal}`;
+            closeSwapModal();
+        }
+
+        // Food Table Populate & Filter
+        function populateFoodTable() {
+            const tbody = document.getElementById('foodTableBody');
+            let html = '';
+            foodDatabase.forEach(item => {
+                html += `
+                    <tr>
+                        <td style="font-weight: 700; color: #0B2840;">${item.name}</td>
+                        <td><span class="gi-badge ${item.statusClass}">GI ${item.gi}</span></td>
+                        <td style="font-weight: 700;">GL ${item.gl}</td>
+                        <td style="font-weight: 700;">${item.status}</td>
+                        <td style="color: #15803d; font-weight: 600;">✨ ${item.swap}</td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function filterFoodTable() {
+            const query = document.getElementById('foodSearchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#foodTableBody tr');
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        // Daily Checklist Progress & Water Tracker
+        function updateChecklistProgress() {
+            const total = document.querySelectorAll('.check-checkbox').length;
+            const checked = document.querySelectorAll('.check-checkbox:checked').length;
+            const pct = Math.round((checked / total) * 100);
+
+            document.getElementById('checklistProgressFill').style.width = pct + '%';
+            document.getElementById('checklistProgressText').innerText = pct + '% Done';
+
+            // Save state to localStorage
+            const state = [];
+            document.querySelectorAll('.check-checkbox').forEach(cb => {
+                state.push(cb.checked);
+            });
+            localStorage.setItem('dailyChecklistState', JSON.stringify(state));
+        }
+
+        function toggleCheckItem(cardElem, cbId) {
+            const cb = document.getElementById(cbId);
+            cb.checked = !cb.checked;
+            if (cb.checked) {
+                cardElem.classList.add('completed');
+            } else {
+                cardElem.classList.remove('completed');
+            }
+            updateChecklistProgress();
+        }
+
+        function loadChecklistState() {
+            const saved = localStorage.getItem('dailyChecklistState');
+            if (saved) {
+                const arr = JSON.parse(saved);
+                document.querySelectorAll('.check-checkbox').forEach((cb, idx) => {
+                    if (arr[idx]) {
+                        cb.checked = true;
+                        cb.closest('.check-item').classList.add('completed');
+                    }
+                });
+                updateChecklistProgress();
+            }
+        }
+
+        let waterCount = parseInt(localStorage.getItem('waterGlassCount')) || 0;
+
+        function updateWaterDisplay() {
+            document.getElementById('waterDisplay').innerText = `${waterCount} / 10 Glasses (${(waterCount * 0.25).toFixed(1)}L)`;
+            localStorage.setItem('waterGlassCount', waterCount);
+        }
+
+        function changeWater(delta) {
+            waterCount = Math.max(0, Math.min(16, waterCount + delta));
+            updateWaterDisplay();
+        }
+
+
+
+        // Vitals Simulator Re-evaluation
+        function setupSimulator() {
+            const simGlucose = document.getElementById('simGlucose');
+            const simSystolic = document.getElementById('simSystolic');
+            const simDiastolic = document.getElementById('simDiastolic');
+            const simBmi = document.getElementById('simBmi');
+            const resetSimBtn = document.getElementById('resetSimBtn');
+            const displayScore = document.getElementById('displayScore');
+
+            const savedGlucose = parseFloat("{{ glucose|floatformat:0 }}") || 100;
+            const savedSys = parseFloat("{{ systolic_bp }}") || 115;
+            const savedDia = parseFloat("{{ diastolic_bp }}") || 75;
+            const savedBmi = parseFloat("{{ bmi_val }}") || 22;
+
+            function reevaluateRecommendations() {
+                const glucose = parseFloat(simGlucose.value) || 100;
+                const sys = parseFloat(simSystolic.value) || 115;
+                const dia = parseFloat(simDiastolic.value) || 75;
+                const bmi = parseFloat(simBmi.value) || 22;
+
+                let score = 92;
+                if (glucose >= 200) score -= 35;
+                else if (glucose >= 126) score -= 22;
+                else if (glucose >= 100) score -= 12;
+
+                if (sys >= 140 || dia >= 90) score -= 18;
+                else if (sys >= 130 || dia >= 80) score -= 10;
+
+                if (bmi >= 30) score -= 15;
+                else if (bmi >= 25) score -= 8;
+
+                score = Math.max(35, Math.min(98, score));
+                displayScore.innerText = score + '%';
+            }
+
+            [simGlucose, simSystolic, simDiastolic, simBmi].forEach(input => {
+                if (input) input.addEventListener('input', reevaluateRecommendations);
+            });
+
+            if (resetSimBtn) {
+                resetSimBtn.addEventListener('click', function () {
+                    simGlucose.value = savedGlucose;
+                    simSystolic.value = savedSys;
+                    simDiastolic.value = savedDia;
+                    simBmi.value = savedBmi;
+                    reevaluateRecommendations();
+                });
+            }
+        }
+
+        // On Page Load
+        document.addEventListener('DOMContentLoaded', function () {
+            generateDietPlan();
+            populateFoodTable();
+            loadChecklistState();
+            updateWaterDisplay();
+            setupSimulator();
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,829 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Tracking & Prediction History - Diabetes Care</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 0;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon-box {
+            width: 38px;
+            height: 38px;
+            background-color: #0B2840;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(11, 40, 64, 0.15);
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0B2840;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            transition: color 0.2s ease;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-item a:hover {
+            color: #0B2840;
+        }
+
+        .nav-item.active a {
+            color: #0B2840;
+            font-weight: 700;
+        }
+
+        .nav-item.active a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background-color: #0B2840;
+            border-radius: 2px;
+        }
+
+        .btn-nav-outline {
+            border: 1.5px solid #0B2840;
+            color: #0B2840 !important;
+            padding: 7px 18px;
+            border-radius: 50px;
+            font-weight: 700 !important;
+            transition: all 0.2s ease;
+        }
+
+        .btn-nav-outline:hover {
+            background-color: #0B2840;
+            color: #ffffff !important;
+        }
+
+        .main-wrapper {
+            flex: 1;
+            padding: 40px 20px 70px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .history-container {
+            width: 100%;
+            max-width: 960px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* Hero Header Card */
+        .hero-card {
+            background: linear-gradient(135deg, #0B2840 0%, #1e3a8a 100%);
+            color: #ffffff;
+            border-radius: 24px;
+            padding: 36px 40px;
+            box-shadow: 0 12px 32px rgba(11, 40, 64, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .hero-title-group h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hero-title-group p {
+            font-size: 14.5px;
+            color: #cbd5e1;
+            font-weight: 500;
+            max-width: 520px;
+        }
+
+        .stats-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 16px 22px;
+            text-align: center;
+            min-width: 130px;
+        }
+
+        .stat-val {
+            font-size: 26px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #93c5fd;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        /* Timeline Header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Log Card Item */
+        .log-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+            padding: 28px;
+            transition: all 0.2s ease;
+        }
+
+        .log-card:hover {
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+            border-color: #cbd5e1;
+        }
+
+        .log-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 18px;
+            margin-bottom: 20px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .log-id-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .log-icon {
+            width: 44px;
+            height: 44px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0B2840;
+        }
+
+        .log-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .log-date {
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        /* Badges */
+        .risk-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .risk-low { background: #dcfce7; color: #15803d; }
+        .risk-moderate { background: #fef3c7; color: #b45309; }
+        .risk-high { background: #fee2e2; color: #b91c1c; }
+
+        /* Vitals Grid */
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .vital-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 16px;
+        }
+
+        .vital-label {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+
+        .vital-val {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        /* Urgent Medical Alert Box */
+        .doctor-alert-box {
+            background-color: #fef2f2;
+            border: 2px solid #ef4444;
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
+        }
+
+        .doctor-alert-box svg {
+            color: #b91c1c;
+            flex-shrink: 0;
+        }
+
+        .doctor-alert-text {
+            font-size: 14px;
+            color: #991b1b;
+            font-weight: 800;
+        }
+
+        /* Accordion Suggestions Drawer */
+        .suggestions-drawer {
+            background: #f0fdf4;
+            border: 1.5px solid #bbf7d0;
+            border-radius: 14px;
+            padding: 18px 20px;
+            margin-top: 14px;
+        }
+
+        .drawer-header {
+            font-size: 14px;
+            font-weight: 800;
+            color: #166534;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .sugg-box {
+            background: #ffffff;
+            border: 1px solid #dcfce7;
+            border-radius: 10px;
+            padding: 10px 14px;
+        }
+
+        .sugg-title {
+            color: #15803d;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .sugg-text {
+            color: #334155;
+            line-height: 1.4;
+        }
+
+        /* Empty State Card */
+        .empty-card {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px dashed #cbd5e1;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .empty-icon-box {
+            width: 72px;
+            height: 72px;
+            background: #e0f2fe;
+            color: #0284c7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+        }
+
+        .empty-card h3 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .empty-card p {
+            font-size: 14.5px;
+            color: #64748b;
+            max-width: 440px;
+            margin: 0 auto 24px auto;
+            line-height: 1.5;
+        }
+
+        .btn-action-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #0B2840;
+            color: #ffffff;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(11, 40, 64, 0.2);
+        }
+
+        .btn-action-primary:hover {
+            background: #143A5D;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .vitals-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .suggestions-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-card {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 28px;
+            }
+            .date-filter-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        /* Date Filter Card Styling */
+        .filter-card {
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1px solid #e2e8f0;
+            padding: 20px 24px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03);
+            margin-bottom: 4px;
+        }
+
+        .date-filter-form {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0B2840;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .date-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .date-input {
+            padding: 10px 16px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            outline: none;
+            background: #f8fafc;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .date-input:focus {
+            border-color: #0B2840;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(11, 40, 64, 0.1);
+        }
+
+        .btn-filter {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #0B2840;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(11, 40, 64, 0.15);
+        }
+
+        .btn-filter:hover {
+            background: #1e3a8a;
+            transform: translateY(-1px);
+        }
+
+        .btn-clear-filter {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+            padding: 9px 16px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-clear-filter:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .active-filter-badge {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #bae6fd;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="header-container">
+            <a href="{% url 'home' %}" class="brand-logo">
+                <div class="logo-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="4" />
+                        <path d="M12 8v8M8 12h8" />
+                    </svg>
+                </div>
+                <span class="brand-name">DIABETES CARE</span>
+            </a>
+
+            <ul class="nav-links">
+                <li class="nav-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a href="{% url 'predict_risk' %}">Risk Prediction</a></li>
+                <li class="nav-item"><a href="{% url 'view_prediction' %}">View Report</a></li>
+                <li class="nav-item active"><a href="{% url 'prediction_history' %}">Database Tracking</a></li>
+                <li class="nav-item"><a href="{% url 'analytics_dashboard' %}">Analytics Dashboard</a></li>
+                <li class="nav-item"><a href="{% url 'recommendation_engine' %}">Recommendations</a></li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a href="{% url 'health_record' %}">Health Record</a></li>
+                    <li class="nav-item"><a href="{% url 'view_profile' %}">Profile</a></li>
+                    <li class="nav-item"><a href="{% url 'user_logout' %}" class="btn-nav-outline">Logout</a></li>
+                {% else %}
+                    <li class="nav-item"><a href="{% url 'user_login' %}" class="btn-nav-outline">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </header>
+
+    <div class="main-wrapper">
+        <div class="history-container">
+
+            <!-- Hero Banner Card -->
+            <div class="hero-card">
+                <div class="hero-title-group">
+                    <h1>
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg>
+                        Database Tracking & Prediction Log
+                    </h1>
+                    <p>Chronological audit log of all previous AI diabetes risk assessments, clinical vitals, and personalized medical recommendations stored in the database.</p>
+                </div>
+
+                <div class="stats-group">
+                    <div class="stat-box">
+                        <div class="stat-val">{{ total_predictions }}</div>
+                        <div class="stat-label">Total Logs</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-val" style="color: #fca5a5;">{{ high_risk_count }}</div>
+                        <div class="stat-label">High Risk Alerts</div>
+                    </div>
+                    <a href="{% url 'analytics_dashboard' %}" class="stat-box" style="background: rgba(255,255,255,0.2); text-decoration: none; border: 1px solid rgba(255,255,255,0.35); cursor: pointer;">
+                        <div class="stat-val" style="font-size: 16px; margin-top: 4px;">📊 Analytics</div>
+                        <div class="stat-label" style="color: #93c5fd;">View Charts →</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Date Search & Filter Toolbar -->
+            <div class="filter-card">
+                <form method="GET" action="{% url 'prediction_history' %}" class="date-filter-form">
+                    <div class="filter-group">
+                        <label for="selected_date" class="filter-label">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Filter Checkups By Date:
+                        </label>
+                        <div class="date-input-wrapper">
+                            <input type="date" id="selected_date" name="selected_date" value="{{ selected_date }}" class="date-input" required>
+                        </div>
+                        <button type="submit" class="btn-filter">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            Check Date
+                        </button>
+                    </div>
+                    {% if has_date_filter %}
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="active-filter-badge">
+                                📅 Date Filter Active: {{ selected_date_display|default:selected_date }}
+                            </span>
+                            <a href="{% url 'prediction_history' %}" class="btn-clear-filter">
+                                ✕ Clear Filter
+                            </a>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+
+            <!-- Section Title -->
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B2840" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    {% if has_date_filter %}
+                        Checkup Results for {{ selected_date_display|default:selected_date }}
+                    {% else %}
+                        Chronological Prediction History
+                    {% endif %}
+                </h2>
+            </div>
+
+            {% if prediction_logs %}
+                {% for log in prediction_logs %}
+                    <!-- Risk Prediction Assessment Checkup Log Card -->
+                    <div class="log-card">
+                        <div class="log-card-header">
+                                <div class="log-id-group">
+                                    <div class="log-icon">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                                    </div>
+                                    <div>
+                                        <div class="log-title">Assessment #{{ log.assessment_num|default:log.id }}</div>
+                                        <div class="log-date">Recorded Date: {{ log.date }}</div>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    {% if "high" in log.risk_level|lower %}
+                                        <span class="risk-badge risk-high">High Risk</span>
+                                    {% elif "mod" in log.risk_level|lower %}
+                                        <span class="risk-badge risk-moderate">Moderate Risk</span>
+                                    {% else %}
+                                        <span class="risk-badge risk-low">{{ log.risk_level|default:"Low Risk" }}</span>
+                                    {% endif %}
+                                    <a href="{% url 'view_prediction' %}?id={{ log.id }}" class="btn-action-primary" style="padding: 6px 14px; font-size: 13px; text-decoration: none; border-radius: 8px;">
+                                        View Report →
+                                    </a>
+                                </div>
+                            </div>
+
+                            {% if log.is_high_risk %}
+                                <!-- Urgent High Risk Doctor Warning Alert -->
+                                <div class="doctor-alert-box">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                        <line x1="12" y1="9" x2="12" y2="13"/>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                    </svg>
+                                    <span class="doctor-alert-text">
+                                        🚨 URGENT MEDICAL ADVISORY: You have to see a doctor immediately for clinical evaluation.
+                                    </span>
+                                </div>
+                            {% endif %}
+
+                            <!-- Medical Vitals Log Grid -->
+                            <div class="vitals-grid">
+                                <div class="vital-box">
+                                    <div class="vital-label">Glucose</div>
+                                    <div class="vital-val">{{ log.glucose }} mg/dL</div>
+                                </div>
+                                <div class="vital-box">
+                                    <div class="vital-label">Blood Pressure</div>
+                                    <div class="vital-val">{{ log.blood_pressure }} mmHg</div>
+                                </div>
+                                <div class="vital-box">
+                                    <div class="vital-label">Insulin</div>
+                                    <div class="vital-val">{{ log.insulin }} mu U/ml</div>
+                                </div>
+                                <div class="vital-box">
+                                    <div class="vital-label">BMI Score</div>
+                                    <div class="vital-val">{{ log.bmi }}</div>
+                                </div>
+                                <div class="vital-box">
+                                    <div class="vital-label">Pregnancies</div>
+                                    <div class="vital-val">{{ log.pregnancies }}</div>
+                                </div>
+                                <div class="vital-box">
+                                    <div class="vital-label">Pedigree Function</div>
+                                    <div class="vital-val">{{ log.pedigree }}</div>
+                                </div>
+                                <div class="vital-box" style="grid-column: span 2;">
+                                    <div class="vital-label">Skin Thickness</div>
+                                    <div class="vital-val">{{ log.skin_thickness }} mm</div>
+                                </div>
+                            </div>
+
+                            <!-- Recommendations & Clinical Suggestions -->
+                            <div class="suggestions-drawer">
+                                <div class="drawer-header">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                                    Clinical Suggestions & Care Guidance
+                                </div>
+                                <div class="suggestions-grid">
+                                    <div class="sugg-box">
+                                        <span class="sugg-title">🥗 Diet Plan</span>
+                                        <span class="sugg-text">{{ log.diet }}</span>
+                                    </div>
+                                    <div class="sugg-box">
+                                        <span class="sugg-title">🏃 Exercise Plan</span>
+                                        <span class="sugg-text">{{ log.exercise }}</span>
+                                    </div>
+                                    <div class="sugg-box">
+                                        <span class="sugg-title">💧 Hydration & Sleep Target</span>
+                                        <span class="sugg-text">Hydration: {{ log.water }} | Sleep: {{ log.sleep }}</span>
+                                    </div>
+                                    <div class="sugg-box">
+                                        <span class="sugg-title">⚖️ Weight Management</span>
+                                        <span class="sugg-text">{{ log.weight_mgmt }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                {% endfor %}
+            {% else %}
+                {% if has_date_filter %}
+                    <div class="empty-card" style="border: 2px dashed #f87171; background: #fff5f5;">
+                        <div class="empty-icon-box" style="background: #fee2e2; color: #dc2626;">
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </div>
+                        <h3 style="color: #991b1b;">There is no check up in that date</h3>
+                        <p style="color: #7f1d1d; max-width: 500px; margin: 0 auto 24px auto;">No diabetes checkups or risk assessment records were found in the database for <strong>{{ selected_date_display|default:selected_date }}</strong>.</p>
+                        <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                            <a href="{% url 'prediction_history' %}" class="btn-action-primary" style="background: #0B2840;">
+                                View All Checkups
+                            </a>
+                            <a href="{% url 'predict_risk' %}" class="btn-action-primary" style="background: #0284c7;">
+                                Add Checkup for Today
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="empty-card">
+                        <div class="empty-icon-box">
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                        </div>
+                        <h3>No Prediction Logs Stored Yet</h3>
+                        <p>There are no historical risk prediction records stored in your database yet. Complete your first risk analysis to start tracking your chronological logs.</p>
+                        <a href="{% url 'predict_risk' %}" class="btn-action-primary">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                            Start Risk Prediction Analysis
+                        </a>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+        </div>
+    </div>
+
+</body>
+</html>

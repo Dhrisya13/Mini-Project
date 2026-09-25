@@ -1,0 +1,934 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinical Analytics & Trends Dashboard - Diabetes Care</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 0;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon-box {
+            width: 38px;
+            height: 38px;
+            background-color: #0B2840;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(11, 40, 64, 0.15);
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0B2840;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            transition: color 0.2s ease;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-item a:hover {
+            color: #0B2840;
+        }
+
+        .nav-item.active a {
+            color: #0B2840;
+            font-weight: 700;
+        }
+
+        .nav-item.active a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background-color: #0B2840;
+            border-radius: 2px;
+        }
+
+        .btn-nav-outline {
+            border: 1.5px solid #0B2840;
+            color: #0B2840 !important;
+            padding: 7px 18px;
+            border-radius: 50px;
+            font-weight: 700 !important;
+            transition: all 0.2s ease;
+        }
+
+        .btn-nav-outline:hover {
+            background-color: #0B2840;
+            color: #ffffff !important;
+        }
+
+        .main-wrapper {
+            flex: 1;
+            padding: 36px 20px 70px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 1150px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* Hero Banner Card */
+        .hero-banner {
+            background: linear-gradient(135deg, #0B2840 0%, #1e3a8a 100%);
+            color: #ffffff;
+            border-radius: 24px;
+            padding: 36px 40px;
+            box-shadow: 0 12px 32px rgba(11, 40, 64, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .hero-title-group h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hero-title-group p {
+            font-size: 14.5px;
+            color: #cbd5e1;
+            font-weight: 500;
+            max-width: 580px;
+            line-height: 1.5;
+        }
+
+        .btn-hero-action {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-hero-action:hover {
+            background: #ffffff;
+            color: #0B2840;
+            transform: translateY(-2px);
+        }
+
+        /* Metrics Summary Cards Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .metric-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            padding: 22px 24px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+            border-color: #cbd5e1;
+        }
+
+        .metric-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .metric-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-icon-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bg-blue { background: #e0f2fe; color: #0284c7; }
+        .bg-emerald { background: #dcfce7; color: #16a34a; }
+        .bg-purple { background: #f3e8ff; color: #9333ea; }
+        .bg-amber { background: #fef3c7; color: #d97706; }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.1;
+            margin-bottom: 4px;
+        }
+
+        .metric-sub {
+            font-size: 12.5px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        /* Charts Layout Grid */
+        .charts-section-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .chart-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-card.full-width {
+            grid-column: span 2;
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .chart-title-box h3 {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 3px;
+        }
+
+        .chart-title-box p {
+            font-size: 12.5px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .chart-canvas-container {
+            position: relative;
+            width: 100%;
+            min-height: 280px;
+            flex: 1;
+        }
+
+        /* Comparison Table Section */
+        .table-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            padding: 28px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+        }
+
+        .table-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .custom-table-container {
+            overflow-x: auto;
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .custom-table th {
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 14px 18px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .custom-table td {
+            padding: 16px 18px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .custom-table tr:hover {
+            background: #f8fafc;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 12.5px;
+            font-weight: 800;
+        }
+
+        .risk-low { background: #dcfce7; color: #15803d; }
+        .risk-moderate { background: #fef3c7; color: #b45309; }
+        .risk-high { background: #fee2e2; color: #b91c1c; }
+
+        .btn-view-link {
+            color: #0284c7;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .btn-view-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-clear-filter {
+            color: #0284c7;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13.5px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            transition: all 0.2s ease;
+        }
+
+        .btn-clear-filter:hover {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        /* Empty State Card */
+        .empty-analytics-card {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 2px dashed #cbd5e1;
+            padding: 60px 40px;
+            text-align: center;
+            grid-column: span 2;
+        }
+
+        .empty-icon-circle {
+            width: 72px;
+            height: 72px;
+            background: #e0f2fe;
+            color: #0284c7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+        }
+
+        .btn-primary-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #0B2840;
+            color: #ffffff;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(11, 40, 64, 0.2);
+            margin-top: 16px;
+        }
+
+        .btn-primary-action:hover {
+            background: #1e3a8a;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 992px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            .chart-card.full-width {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-banner {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="header-container">
+            <a href="{% url 'home' %}" class="brand-logo">
+                <div class="logo-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="4" />
+                        <path d="M12 8v8M8 12h8" />
+                    </svg>
+                </div>
+                <span class="brand-name">DIABETES CARE</span>
+            </a>
+
+            <ul class="nav-links">
+                <li class="nav-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a href="{% url 'predict_risk' %}">Risk Prediction</a></li>
+                <li class="nav-item"><a href="{% url 'view_prediction' %}">View Report</a></li>
+                <li class="nav-item"><a href="{% url 'prediction_history' %}">Database Tracking</a></li>
+                <li class="nav-item active"><a href="{% url 'analytics_dashboard' %}">Analytics Dashboard</a></li>
+                <li class="nav-item"><a href="{% url 'recommendation_engine' %}">Recommendations</a></li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a href="{% url 'health_record' %}">Health Record</a></li>
+                    <li class="nav-item"><a href="{% url 'view_profile' %}">Profile</a></li>
+                    <li class="nav-item"><a href="{% url 'user_logout' %}" class="btn-nav-outline">Logout</a></li>
+                {% else %}
+                    <li class="nav-item"><a href="{% url 'user_login' %}" class="btn-nav-outline">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </header>
+
+    <div class="main-wrapper">
+        <div class="dashboard-container">
+
+            <!-- Hero Banner Card -->
+            <div class="hero-banner">
+                <div class="hero-title-group">
+                    <h1>
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                        Clinical Vitals & Assessment Analytics
+                    </h1>
+                    <p>Graphical representation of your historical diabetes risk assessments. Track long-term trends in blood glucose, blood pressure, insulin, and BMI to observe changes over time.</p>
+                </div>
+                <div>
+                    <a href="{% url 'predict_risk' %}" class="btn-hero-action">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        New Risk Assessment
+                    </a>
+                </div>
+            </div>
+
+            <!-- Metric Summary Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">Total Assessments</span>
+                        <div class="metric-icon-box bg-blue">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        </div>
+                    </div>
+                    <div class="metric-value">{{ total_checkups }}</div>
+                    <div class="metric-sub">Recorded checkups</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">Latest Glucose</span>
+                        <div class="metric-icon-box bg-emerald">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        </div>
+                    </div>
+                    <div class="metric-value">{% if latest_glucose != "N/A" %}{{ latest_glucose }} <span style="font-size: 14px; font-weight:600;">mg/dL</span>{% else %}N/A{% endif %}</div>
+                    <div class="metric-sub">Avg across history: {{ avg_glucose }} mg/dL</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">Latest Blood Pressure</span>
+                        <div class="metric-icon-box bg-purple">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                        </div>
+                    </div>
+                    <div class="metric-value">{% if latest_bp != "N/A" %}{{ latest_bp }} <span style="font-size: 14px; font-weight:600;">mmHg</span>{% else %}N/A{% endif %}</div>
+                    <div class="metric-sub">Systolic reading</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">Latest BMI Score</span>
+                        <div class="metric-icon-box bg-amber">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        </div>
+                    </div>
+                    <div class="metric-value">{{ latest_bmi }}</div>
+                    <div class="metric-sub">Body Mass Index</div>
+                </div>
+            </div>
+
+            <!-- Charts Section Title -->
+            <div class="charts-section-title">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0B2840" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17l-5-5-4 4-4-5"/></svg>
+                Graphical Vitals Trends Over Time
+            </div>
+
+            {% if total_checkups > 0 %}
+                <!-- Charts Grid -->
+                <div class="charts-grid">
+
+                    <!-- Chart 1: Blood Glucose Progression -->
+                    <div class="chart-card full-width">
+                        <div class="chart-header">
+                            <div class="chart-title-box">
+                                <h3>Blood Glucose Level Progression (mg/dL)</h3>
+                                <p>Historical timeline showing changes in blood glucose values over past checkups with clinical reference threshold (>140 mg/dL warning level)</p>
+                            </div>
+                        </div>
+                        <div class="chart-canvas-container">
+                            <canvas id="glucoseChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Blood Pressure & Insulin Trends -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-box">
+                                <h3>Blood Pressure & Insulin Multi-Trend</h3>
+                                <p>Tracking Systolic Blood Pressure (mmHg) & Insulin (mu U/ml)</p>
+                            </div>
+                        </div>
+                        <div class="chart-canvas-container">
+                            <canvas id="bpInsulinChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 3: Risk Level Category Distribution -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-box">
+                                <h3>Assessment Risk Profile Distribution</h3>
+                                <p>Proportion of Low, Moderate, and High Risk evaluations recorded</p>
+                            </div>
+                        </div>
+                        <div class="chart-canvas-container">
+                            <canvas id="riskDistributionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Chart 4: Body Mass Index (BMI) Trajectory -->
+                    <div class="chart-card full-width">
+                        <div class="chart-header">
+                            <div class="chart-title-box">
+                                <h3>Body Mass Index (BMI) Trajectory</h3>
+                                <p>Observed changes in calculated Body Mass Index across your assessment timeline</p>
+                            </div>
+                        </div>
+                        <div class="chart-canvas-container">
+                            <canvas id="bmiChart"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Tabular Data Comparison Table -->
+                <div class="table-card">
+                    <div class="table-header">
+                        <div>
+                            <h3 style="font-size: 18px; font-weight: 800; color: #0f172a;">Chronological Checkup Log Data</h3>
+                            <p style="font-size: 13px; color: #64748b;">Comparative overview of all clinical vitals recorded across past checkups</p>
+                        </div>
+                        <a href="{% url 'prediction_history' %}" class="btn-clear-filter">
+                            View Full History Log →
+                        </a>
+                    </div>
+                    <div class="custom-table-container">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Assessment ID</th>
+                                    <th>Checkup Date</th>
+                                    <th>Glucose (mg/dL)</th>
+                                    <th>Blood Pressure (mmHg)</th>
+                                    <th>Insulin (mu U/ml)</th>
+                                    <th>BMI Score</th>
+                                    <th>Risk Level Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in logs %}
+                                    <tr>
+                                        <td>#{{ item.assessment_num|default:item.id }}</td>
+                                        <td>{{ item.date }}</td>
+                                        <td>
+                                            <strong style="{% if item.glucose >= 140 %}color: #dc2626;{% else %}color: #15803d;{% endif %}">
+                                                {{ item.glucose }} mg/dL
+                                            </strong>
+                                        </td>
+                                        <td>{{ item.bp }} mmHg</td>
+                                        <td>{{ item.insulin }} mu U/ml</td>
+                                        <td>{{ item.bmi }}</td>
+                                        <td>
+                                            {% if "high" in item.risk_level|lower %}
+                                                <span class="risk-badge risk-high">High Risk</span>
+                                            {% elif "mod" in item.risk_level|lower %}
+                                                <span class="risk-badge risk-moderate">Moderate Risk</span>
+                                            {% else %}
+                                                <span class="risk-badge risk-low">{{ item.risk_level|default:"Low Risk" }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'view_prediction' %}?id={{ item.id }}" class="btn-view-link">View Report →</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            {% else %}
+                <div class="empty-analytics-card">
+                    <div class="empty-icon-circle">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                    </div>
+                    <h3 style="font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">No Assessment Data Available for Graphical Analytics</h3>
+                    <p style="font-size: 14.5px; color: #64748b; max-width: 480px; margin: 0 auto; line-height: 1.5;">You haven't completed any diabetes risk predictions yet. Once you complete your first assessment, interactive graphs and long-term trend analysis will appear here.</p>
+                    <a href="{% url 'predict_risk' %}" class="btn-primary-action">
+                        Start First Risk Assessment
+                    </a>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    {% if total_checkups > 0 %}
+    <script>
+        // Parse JSON data passed from Django backend with safe defaults
+        const labelsData = {{ labels_json|safe|default:"[]" }};
+        const glucoseData = {{ glucose_json|safe|default:"[]" }};
+        const bpData = {{ bp_json|safe|default:"[]" }};
+        const insulinData = {{ insulin_json|safe|default:"[]" }};
+        const bmiData = {{ bmi_json|safe|default:"[]" }};
+        const riskCountsData = {{ risk_counts_json|safe|default:"[0, 0, 0]" }};
+
+        if (typeof Chart !== 'undefined') {
+            // Standard Chart.js configuration defaults
+            Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+            Chart.defaults.color = '#64748b';
+
+            // 1. Glucose Progression Line Chart
+            const elGlucose = document.getElementById('glucoseChart');
+            if (elGlucose) {
+                const ctxGlucose = elGlucose.getContext('2d');
+                const glucoseGradient = ctxGlucose.createLinearGradient(0, 0, 0, 300);
+                glucoseGradient.addColorStop(0, 'rgba(2, 132, 199, 0.25)');
+                glucoseGradient.addColorStop(1, 'rgba(2, 132, 199, 0.0)');
+
+                new Chart(ctxGlucose, {
+                    type: 'line',
+                    data: {
+                        labels: labelsData,
+                        datasets: [{
+                            label: 'Blood Glucose (mg/dL)',
+                            data: glucoseData,
+                            borderColor: '#0284c7',
+                            backgroundColor: glucoseGradient,
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.35,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderColor: '#0284c7',
+                            pointBorderWidth: 3,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#0f172a',
+                                titleFont: { size: 13, weight: 'bold' },
+                                bodyFont: { size: 13 },
+                                padding: 12,
+                                cornerRadius: 10
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                grid: { color: '#f1f5f9' },
+                                title: { display: true, text: 'Glucose (mg/dL)', font: { weight: 'bold' } }
+                            },
+                            x: {
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 2. Blood Pressure & Insulin Dual Line Chart
+            const elBpInsulin = document.getElementById('bpInsulinChart');
+            if (elBpInsulin) {
+                const ctxBpInsulin = elBpInsulin.getContext('2d');
+                new Chart(ctxBpInsulin, {
+                    type: 'line',
+                    data: {
+                        labels: labelsData,
+                        datasets: [
+                            {
+                                label: 'Blood Pressure (mmHg)',
+                                data: bpData,
+                                borderColor: '#9333ea',
+                                backgroundColor: 'transparent',
+                                borderWidth: 3,
+                                tension: 0.3,
+                                pointBackgroundColor: '#9333ea',
+                                pointRadius: 5
+                            },
+                            {
+                                label: 'Insulin Level (mu U/ml)',
+                                data: insulinData,
+                                borderColor: '#3b82f6',
+                                backgroundColor: 'transparent',
+                                borderWidth: 2,
+                                borderDash: [5, 5],
+                                tension: 0.3,
+                                pointBackgroundColor: '#3b82f6',
+                                pointRadius: 4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'top', labels: { font: { weight: 'bold' } } },
+                            tooltip: {
+                                backgroundColor: '#0f172a',
+                                padding: 12,
+                                cornerRadius: 10
+                            }
+                        },
+                        scales: {
+                            y: {
+                                grid: { color: '#f1f5f9' },
+                                title: { display: true, text: 'Value', font: { weight: 'bold' } }
+                            },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            // 3. Risk Level Doughnut Chart
+            const elRisk = document.getElementById('riskDistributionChart');
+            if (elRisk) {
+                const ctxRisk = elRisk.getContext('2d');
+                new Chart(ctxRisk, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Low Risk', 'Moderate Risk', 'High Risk'],
+                        datasets: [{
+                            data: riskCountsData,
+                            backgroundColor: ['#22c55e', '#f59e0b', '#ef4444'],
+                            borderWidth: 3,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { font: { weight: 'bold' }, padding: 16 } },
+                            tooltip: {
+                                backgroundColor: '#0f172a',
+                                padding: 12,
+                                cornerRadius: 10
+                            }
+                        },
+                        cutout: '68%'
+                    }
+                });
+            }
+
+            // 4. BMI Trajectory Area Chart
+            const elBmi = document.getElementById('bmiChart');
+            if (elBmi) {
+                const ctxBmi = elBmi.getContext('2d');
+                const bmiGradient = ctxBmi.createLinearGradient(0, 0, 0, 300);
+                bmiGradient.addColorStop(0, 'rgba(217, 119, 6, 0.25)');
+                bmiGradient.addColorStop(1, 'rgba(217, 119, 6, 0.0)');
+
+                new Chart(ctxBmi, {
+                    type: 'line',
+                    data: {
+                        labels: labelsData,
+                        datasets: [{
+                            label: 'BMI Score',
+                            data: bmiData,
+                            borderColor: '#d97706',
+                            backgroundColor: bmiGradient,
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.35,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderColor: '#d97706',
+                            pointBorderWidth: 3,
+                            pointRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#0f172a',
+                                padding: 12,
+                                cornerRadius: 10
+                            }
+                        },
+                        scales: {
+                            y: {
+                                grid: { color: '#f1f5f9' },
+                                title: { display: true, text: 'BMI Score', font: { weight: 'bold' } }
+                            },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+    {% endif %}
+
+</body>
+</html>

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <style>
+        /* General Reset and Body Styling */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header / Navigation Bar */
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 0;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon-box {
+            width: 38px;
+            height: 38px;
+            background-color: #0B2840;
+            border-radius: 99px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(11, 40, 64, 0.15);
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0B2840;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #475569;
+            transition: color 0.2s ease;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-item a:hover {
+            color: #0B2840;
+        }
+
+        .nav-item.active a {
+            color: #0B2840;
+            font-weight: 700;
+        }
+
+        .nav-item.active a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background-color: #0B2840;
+            border-radius: 2px;
+        }
+
+        .btn-nav-outline {
+            border: 1.5px solid #0B2840;
+            color: #0B2840 !important;
+            padding: 7px 18px;
+            border-radius: 50px;
+            font-weight: 700 !important;
+            transition: all 0.2s ease;
+        }
+
+        .btn-nav-outline:hover {
+            background-color: #0B2840;
+            color: #ffffff !important;
+        }
+
+        .main-wrapper {
+            flex: 1;
+            padding: 36px 20px 60px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* Page Title */
+        .page-title {
+            color: #003366;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        /* Card Container */
+        .section-card {
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        /* Section Header */
+        .section-title {
+            color: #003366;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .section-divider {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin-bottom: 25px;
+        }
+
+        /* Grid Layouts */
+        .grid-2-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 30px;
+        }
+        .grid-3-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px 30px;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Form Elements */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-size: 12px;
+            color: #4b5563;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 15px;
+            color: #111827;
+            outline: none;
+            font-family: inherit;
+            appearance: none;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus {
+            border-color: #007bff;
+        }
+        input::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Custom Select Dropdown Arrow */
+        select {
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236b7280%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px top 50%;
+            background-size: 10px auto;
+        }
+
+        /* Readonly/Disabled State */
+        input:read-only {
+            background-color: #f3f4f6;
+            color: #6b7280;
+            font-weight: 600;
+            cursor: not-allowed;
+            border-color: #e5e7eb;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+            margin-bottom: 40px;
+        }
+        .btn {
+            border: none;
+            border-radius: 6px;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .btn-save {
+            background-color: #007bff;
+            color: #ffffff;
+            min-width: 150px;
+        }
+        .btn-save:hover {
+            background-color: #0056b3;
+        }
+        .btn-cancel {
+            background-color: #e5e7eb;
+            color: #4b5563;
+            min-width: 120px;
+        }
+        .btn-cancel:hover {
+            background-color: #d1d5db;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2-cols, .grid-3-cols {
+                grid-template-columns: 1fr;
+            }
+            .action-buttons {
+                flex-direction: column-reverse;
+            }
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header>
+        <div class="header-container">
+            <a href="{% url 'home' %}" class="brand-logo">
+                <div class="logo-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="4" />
+                        <path d="M12 8v8M8 12h8" />
+                    </svg>
+                </div>
+                <span class="brand-name">DIABETES CARE</span>
+            </a>
+
+            <ul class="nav-links">
+                <li class="nav-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a href="{% url 'health_record' %}">Health Record</a></li>
+                <li class="nav-item"><a href="{% url 'predict_risk' %}">Risk Prediction</a></li>
+                <li class="nav-item active"><a href="{% url 'view_profile' %}">Profile</a></li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a href="{% url 'user_logout' %}" class="btn-nav-outline">Logout</a></li>
+                {% else %}
+                    <li class="nav-item"><a href="{% url 'user_login' %}" class="btn-nav-outline">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </header>
+
+    <div class="main-wrapper">
+        <div class="main-container">
+            <h1 class="page-title">Edit Profile</h1>
+
+
+        <form action="{% url 'edit_profile' %}" method="POST">
+            {% csrf_token %}
+
+            <!-- Personal Details Section -->
+            <div class="section-card">
+                <h2 class="section-title">Personal Details</h2>
+                <hr class="section-divider">
+
+                <div class="grid-2-cols">
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" name="fullName" value="{{ full_name }}" placeholder="Enter Full Name" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Date of Birth</label>
+                        <input type="date" id="dobInput" name="dob" value="{{ dob }}" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" value="{{ email }}" readonly>
+                    </div>
+                    <div class="input-group">
+                        <label>Gender</label>
+                        <select name="gender">
+                            <option value="" disabled {% if not gender %}selected{% endif %}>Select Gender</option>
+                            <option value="male" {% if gender|lower == 'male' %}selected{% endif %}>Male</option>
+                            <option value="female" {% if gender|lower == 'female' %}selected{% endif %}>Female</option>
+                            <option value="other" {% if gender|lower == 'other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <input type="text" name="phone" value="{{ phone }}" placeholder="Enter Phone Number">
+                    </div>
+                    <div class="input-group">
+                        <label>Age</label>
+                        <input type="number" id="ageOutput" placeholder="0" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Physical Details Section -->
+            <div class="section-card">
+                <h2 class="section-title">Physical Details</h2>
+                <hr class="section-divider">
+
+                <div class="grid-3-cols">
+                    <div class="input-group">
+                        <label>Height (cm)</label>
+                        <input type="number" id="heightInput" name="height" value="{{ height }}" placeholder="e.g. 175" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Weight (kg)</label>
+                        <input type="number" id="weightInput" name="weight" value="{{ weight }}" placeholder="e.g. 70" required>
+                    </div>
+                    <div class="input-group">
+                        <label>BMI (Auto Calculated)</label>
+                        <input type="text" id="bmiOutput" placeholder="0.0" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lifestyle Details Section -->
+            <div class="section-card">
+                <h2 class="section-title">Lifestyle Details</h2>
+                <hr class="section-divider">
+
+                <div class="grid-2-cols">
+                    <div class="input-group">
+                        <label>Smoking</label>
+                        <select name="smoking">
+                            <option value="" disabled {% if not smoking %}selected{% endif %}>Select Option</option>
+                            <option value="Non-Smoker" {% if smoking|lower == 'non-smoker' %}selected{% endif %}>Non-Smoker</option>
+                            <option value="Smoker" {% if smoking|lower == 'smoker' %}selected{% endif %}>Smoker</option>
+                            <option value="Occasional" {% if smoking|lower == 'occasional' %}selected{% endif %}>Occasional</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Sleep Duration (hrs/day)</label>
+                        <input type="number" name="sleep" value="{{ sleep }}" placeholder="e.g. 8">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Alcohol Consumption</label>
+                        <select name="alcohol">
+                            <option value="" disabled {% if not alcohol %}selected{% endif %}>Select Option</option>
+                            <option value="None" {% if alcohol|lower == 'none' %}selected{% endif %}>None</option>
+                            <option value="Occasional" {% if alcohol|lower == 'occasional' %}selected{% endif %}>Occasional</option>
+                            <option value="Frequent" {% if alcohol|lower == 'frequent' %}selected{% endif %}>Frequent</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Water Intake (l/day)</label>
+                        <input type="number" step="0.1" name="water" value="{{ water }}" placeholder="e.g. 2.5">
+                    </div>
+
+                    <div class="input-group full-width">
+                        <label>Physical Activity</label>
+                        <select name="activity">
+                            <option value="" disabled {% if not activity %}selected{% endif %}>Select Option</option>
+                            <option value="Sedentary" {% if activity|lower == 'sedentary' %}selected{% endif %}>Sedentary</option>
+                            <option value="Lightly Active" {% if activity|lower == 'lightly active' %}selected{% endif %}>Lightly Active</option>
+                            <option value="Moderately Active" {% if activity|lower == 'moderately active' %}selected{% endif %}>Moderately Active</option>
+                            <option value="Very Active" {% if activity|lower == 'very active' %}selected{% endif %}>Very Active</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons for Editing -->
+            <div class="action-buttons">
+                <a href="{% url 'view_profile' %}" class="btn btn-cancel" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">View Profile</a>
+                <button type="submit" class="btn btn-save">Save Changes</button>
+            </div>
+
+        </form>
+
+        </div>
+    </div>
+
+    <!-- JavaScript for Calculations -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Elements
+            const heightField = document.getElementById('heightInput');
+            const weightField = document.getElementById('weightInput');
+            const bmiField = document.getElementById('bmiOutput');
+            const dobField = document.getElementById('dobInput');
+            const ageField = document.getElementById('ageOutput');
+
+            // --- 1. BMI CALCULATION ---
+            function calculateBMI() {
+                const heightCm = parseFloat(heightField.value);
+                const weightKg = parseFloat(weightField.value);
+
+                if (!isNaN(heightCm) && !isNaN(weightKg) && heightCm > 0 && weightKg > 0) {
+                    const heightMeters = heightCm / 100;
+                    const bmi = weightKg / (heightMeters * heightMeters);
+                    bmiField.value = bmi.toFixed(1);
+                } else {
+                    bmiField.value = '';
+                }
+            }
+
+            // --- 2. AGE CALCULATION ---
+            function calculateAge() {
+                const dobValue = dobField.value;
+
+                if (dobValue) {
+                    const dateParts = dobValue.split('-');
+
+                    if (dateParts.length === 3) {
+                        const birthYear = parseInt(dateParts[0], 10);
+                        const birthMonth = parseInt(dateParts[1], 10) - 1;
+                        const birthDay = parseInt(dateParts[2], 10);
+
+                        const today = new Date();
+                        let age = today.getFullYear() - birthYear;
+                        const monthDifference = today.getMonth() - birthMonth;
+
+                        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDay)) {
+                            age--;
+                        }
+
+                        ageField.value = age >= 0 ? age : 0;
+                    }
+                } else {
+                    ageField.value = '';
+                }
+            }
+
+            // Add Event Listeners
+            if (heightField && weightField) {
+                heightField.addEventListener('input', calculateBMI);
+                weightField.addEventListener('input', calculateBMI);
+            }
+
+            if (dobField) {
+                dobField.addEventListener('input', calculateAge);
+                dobField.addEventListener('change', calculateAge);
+            }
+
+            // RUN CALCULATIONS ON PAGE LOAD
+            calculateBMI();
+            calculateAge();
+        });
+    </script>
+
+</body>
+</html>

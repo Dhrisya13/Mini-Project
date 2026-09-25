@@ -1,0 +1,1320 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Diabetes Risk Prediction - Diabetes Care</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header / Navigation Bar */
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 0;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon-box {
+            width: 38px;
+            height: 38px;
+            background-color: #0B2840;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(11, 40, 64, 0.15);
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0B2840;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #475569;
+            transition: color 0.2s ease;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-item a:hover {
+            color: #0B2840;
+        }
+
+        .nav-item.active a {
+            color: #0B2840;
+            font-weight: 700;
+        }
+
+        .nav-item.active a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background-color: #0B2840;
+            border-radius: 2px;
+        }
+
+        .btn-nav-outline {
+            border: 1.5px solid #0B2840;
+            color: #0B2840 !important;
+            padding: 7px 18px;
+            border-radius: 50px;
+            font-weight: 700 !important;
+            transition: all 0.2s ease;
+        }
+
+        .btn-nav-outline:hover {
+            background-color: #0B2840;
+            color: #ffffff !important;
+        }
+
+        /* Main Section Wrapper */
+        .main-wrapper {
+            flex: 1;
+            padding: 48px 20px 70px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Main Form Card */
+        .card-container {
+            width: 100%;
+            max-width: 780px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        /* Header Card Header */
+        .card-header {
+            padding: 32px 36px 24px 36px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .header-icon-box {
+            width: 56px;
+            height: 56px;
+            background-color: #e0f2fe;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0369a1;
+            flex-shrink: 0;
+        }
+
+        .header-title-box h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #0B2840;
+            letter-spacing: -0.3px;
+            margin-bottom: 4px;
+        }
+
+        .header-title-box p {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* Form Body */
+        .card-body {
+            padding: 36px;
+        }
+
+        /* 2-Column Grid Layout */
+        .grid-2-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px 28px;
+            margin-bottom: 28px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            height: 48px;
+            padding: 0 16px;
+            font-size: 14.5px;
+            font-weight: 500;
+            color: #0f172a;
+            background-color: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input:focus {
+            border-color: #0B2840;
+            box-shadow: 0 0 0 3.5px rgba(11, 40, 64, 0.1);
+        }
+
+        input:read-only {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            border-color: #cbd5e1;
+            padding-right: 40px;
+            cursor: not-allowed;
+        }
+
+        .lock-icon {
+            position: absolute;
+            right: 14px;
+            color: #94a3b8;
+            pointer-events: none;
+        }
+
+        input.error {
+            border-color: #dc2626 !important;
+            background-color: #fef2f2 !important;
+        }
+
+        .error-text {
+            color: #dc2626;
+            font-size: 12.5px;
+            font-weight: 600;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-divider {
+            border: none;
+            border-top: 1px solid #f1f5f9;
+            margin-bottom: 28px;
+        }
+
+        /* Predict Action Button */
+        .btn-predict {
+            width: 100%;
+            height: 52px;
+            background-color: #0B2840;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(11, 40, 64, 0.2);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-predict:hover {
+            background-color: #143A5D;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 22px rgba(11, 40, 64, 0.3);
+        }
+
+        .disclaimer-text {
+            text-align: center;
+            font-size: 12.5px;
+            color: #64748b;
+            line-height: 1.5;
+            margin-top: 16px;
+            padding: 0 10px;
+        }
+
+        /* Popup Modal Overlay */
+        .popup-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 20px;
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 580px;
+            border-radius: 24px;
+            padding: 36px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(0.94);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .popup-overlay.active .popup-card {
+            transform: scale(1);
+        }
+
+        .popup-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 8px 22px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .result-badge.low { background: #dcfce7; color: #15803d; }
+        .result-badge.moderate { background: #fef3c7; color: #b45309; }
+        .result-badge.high { background: #fee2e2; color: #b91c1c; }
+
+        .score-display {
+            font-size: 32px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .score-subtext {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .recommendation-list {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin: 20px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .rec-item {
+            margin-bottom: 14px;
+        }
+
+        .rec-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .rec-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #0B2840;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .rec-desc {
+            font-size: 14px;
+            color: #334155;
+            line-height: 1.4;
+        }
+
+        .popup-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .popup-btn {
+            flex: 1;
+            height: 48px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .popup-btn-primary {
+            background: #0B2840;
+            color: #ffffff;
+            border: none;
+        }
+
+        .popup-btn-primary:hover {
+            background: #061928;
+        }
+
+        .popup-btn-secondary {
+            background: #ffffff;
+            color: #475569;
+            border: 1.5px solid #cbd5e1;
+        }
+
+        .popup-btn-secondary:hover {
+            border-color: #0B2840;
+            color: #0B2840;
+        }
+
+        @media (max-width: 680px) {
+            .grid-2-cols {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .card-header {
+                padding: 24px 20px;
+            }
+            .card-body {
+                padding: 24px 20px;
+            }
+            .popup-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <header>
+        <div class="header-container">
+            <a href="{% url 'home' %}" class="brand-logo">
+                <div class="logo-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="4" />
+                        <path d="M12 8v8M8 12h8" />
+                    </svg>
+                </div>
+                <span class="brand-name">DIABETES CARE</span>
+            </a>
+
+            <ul class="nav-links">
+                <li class="nav-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item active"><a href="{% url 'predict_risk' %}">Risk Prediction</a></li>
+                <li class="nav-item"><a href="{% url 'view_prediction' %}">View Report</a></li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a href="{% url 'prediction_history' %}">Database Tracking</a></li>
+                    <li class="nav-item"><a href="{% url 'analytics_dashboard' %}">Analytics Dashboard</a></li>
+                    <li class="nav-item"><a href="{% url 'recommendation_engine' %}">Recommendations</a></li>
+                    <li class="nav-item"><a href="{% url 'health_record' %}">Health Record</a></li>
+                    <li class="nav-item"><a href="{% url 'view_profile' %}">Profile</a></li>
+                    <li class="nav-item"><a href="{% url 'user_logout' %}" class="btn-nav-outline">Logout</a></li>
+                {% else %}
+                    <li class="nav-item"><a href="{% url 'user_login' %}" class="btn-nav-outline">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <div class="card-container">
+            
+            <!-- Card Header -->
+            <div class="card-header">
+                <div class="header-icon-box">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M12 8v8M8 12h8"/>
+                    </svg>
+                </div>
+                <div class="header-title-box">
+                    <h1>Enter Your Medical Details</h1>
+                    <p>Provide accurate data for an AI-driven clinical risk assessment.</p>
+                </div>
+            </div>
+
+            <!-- Card Form Body -->
+            <div class="card-body">
+
+                {% if latest_risk %}
+                <!-- Restored Data Notification Banner -->
+                <div style="background: #e0f2fe; border: 1.5px solid #0284c7; color: #0369a1; border-radius: 14px; padding: 16px 20px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <div>
+                            <div style="font-size: 14px; font-weight: 800; color: #0B2840;">
+                                Saved Assessment Restored for {{ user_data.Email|default:request.user.email }}
+                            </div>
+                            <div style="font-size: 13px; font-weight: 600; color: #0369a1;">
+                                Previous Result: <strong>{{ latest_risk.Risk_level }}</strong> ({{ latest_risk.Prediction_date }}) — Form populated with your entered medical data.
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{% url 'view_prediction' %}" class="btn-action-primary" style="padding: 8px 16px; font-size: 13px; text-decoration: none; border-radius: 8px; background: #0284c7; color: #ffffff; font-weight: 700; white-space: nowrap;">
+                        View Report →
+                    </a>
+                </div>
+                {% endif %}
+
+                <!-- Validation Error Alert Banner -->
+                <div id="validationErrorBanner" style="display: none; background-color: #fef2f2; border: 1.5px solid #fecaca; color: #dc2626; border-radius: 12px; padding: 14px 20px; font-size: 14px; font-weight: 700; margin-bottom: 24px; text-align: center; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.08);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    Please enter valid medical values in all fields before calculating risk.
+                </div>
+
+                <form id="predictionForm" action="{% url 'predict_risk' %}" method="POST" novalidate>
+                    {% csrf_token %}
+
+                    <div class="grid-2-cols">
+                        
+                        <!-- Row 1 Left: Pregnancies -->
+                        <div class="input-group">
+                            <label for="pregnanciesInput">Pregnancies</label>
+                            <input type="number" id="pregnanciesInput" name="pregnancies" min="0" max="20" placeholder="e.g. 0" value="{% if latest_pred %}{{ latest_pred.Pregnancies }}{% endif %}">
+                            <span class="error-text" id="pregnanciesError">Please enter a valid number of pregnancies (0 to 20).</span>
+                        </div>
+
+                        <!-- Row 1 Right: Glucose -->
+                        <div class="input-group">
+                            <label for="glucoseInput">Glucose (mg/dL)</label>
+                            <input type="number" id="glucoseInput" name="glucose" step="0.1" min="40" max="400" placeholder="e.g. 120" value="{% if latest_pred %}{{ latest_pred.Glucose }}{% endif %}" required>
+                            <span class="error-text" id="glucoseError">Please enter a valid glucose level (40 to 400 mg/dL).</span>
+                        </div>
+
+                        <!-- Row 2: Two-Way Blood Pressure Entering & Analyzed Range Section -->
+                        <div class="input-group full-width" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 16px; padding: 22px; grid-column: span 2;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+                                <label style="font-size: 15px; color: #0B2840; font-weight: 800; display: flex; align-items: center; gap: 8px; margin-bottom: 0;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                                    Two-Way Blood Pressure Entering (mm Hg)
+                                </label>
+                                <span style="font-size: 12px; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 5px 12px; border-radius: 20px;">Systolic / Diastolic Analysis</span>
+                            </div>
+
+                            <div class="grid-2-cols" style="margin-bottom: 0;">
+                                <div class="input-group">
+                                    <label for="systolicBpInput" style="font-size: 13.5px; font-weight: 700; color: #0f172a;">Systolic BP (mm Hg)</label>
+                                    <input type="number" id="systolicBpInput" name="systolic_bp" step="1" min="50" max="260" placeholder="e.g. 120 (Top reading)" value="{% if latest_pred and latest_pred.Blood_Pressure > 100 %}{{ latest_pred.Blood_Pressure|floatformat:0 }}{% endif %}">
+                                    <span class="error-text" id="systolicBpError">Please enter valid Systolic Blood Pressure (50 to 260 mm Hg).</span>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="diastolicBpInput" style="font-size: 13.5px; font-weight: 700; color: #0f172a;">Diastolic BP (mm Hg)</label>
+                                    <input type="number" id="diastolicBpInput" name="diastolic_bp" step="1" min="30" max="160" placeholder="e.g. 80 (Bottom reading)" value="{% if latest_pred and latest_pred.Blood_Pressure <= 100 %}{{ latest_pred.Blood_Pressure|floatformat:0 }}{% endif %}">
+                                    <span class="error-text" id="diastolicBpError">Please enter valid Diastolic Blood Pressure (30 to 160 mm Hg).</span>
+                                </div>
+                            </div>
+
+                            <!-- Hidden compatibility BP input for single value -->
+                            <input type="hidden" id="bpInput" name="blood_pressure" value="">
+
+                            <!-- Live Analyzed Blood Pressure Range Card -->
+                            <div id="bpAnalysisCard" style="margin-top: 16px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 18px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);">
+                                <div style="font-size: 13px; font-weight: 800; color: #0B2840; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                                    <span>Analyzed Blood Pressure Category & Range</span>
+                                    <span id="bpBadge" style="font-size: 12.5px; font-weight: 800; padding: 5px 14px; border-radius: 30px; background: #dcfce7; color: #15803d;">Normal BP</span>
+                                </div>
+
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; text-align: center; background: #f8fafc; padding: 12px; border-radius: 10px; margin-bottom: 12px; border: 1px solid #e2e8f0;">
+                                    <div>
+                                        <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Systolic Range</div>
+                                        <div id="sysRangeVal" style="font-size: 14.5px; font-weight: 800; color: #0f172a; margin-top: 2px;">&lt; 120 mm Hg</div>
+                                    </div>
+                                    <div style="border-left: 1px solid #e2e8f0;">
+                                        <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Diastolic Range</div>
+                                        <div id="diaRangeVal" style="font-size: 14.5px; font-weight: 800; color: #0f172a; margin-top: 2px;">&lt; 80 mm Hg</div>
+                                    </div>
+                                    <div style="border-left: 1px solid #e2e8f0;">
+                                        <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Pulse Pressure</div>
+                                        <div id="pulsePressVal" style="font-size: 14.5px; font-weight: 800; color: #0284c7; margin-top: 2px;">40 mm Hg</div>
+                                    </div>
+                                    <div style="border-left: 1px solid #e2e8f0;">
+                                        <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Mean MAP</div>
+                                        <div id="mapVal" style="font-size: 14.5px; font-weight: 800; color: #9333ea; margin-top: 2px;">93.3 mm Hg</div>
+                                    </div>
+                                </div>
+
+                                <div id="bpSummaryText" style="font-size: 13px; color: #334155; line-height: 1.5; font-weight: 600;">
+                                    Your Blood Pressure reading of <strong>120 / 80 mm Hg</strong> is in the <strong>Normal (Optimal BP)</strong> category (Target range: Systolic &lt; 120 mm Hg and Diastolic &lt; 80 mm Hg).
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 2 Right: BMI (Auto Calculated) -->
+                        <div class="input-group">
+                            <label for="bmiInput">BMI (Auto Calculated)</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="bmiInput" name="bmi" value="{{ bmi_status_str }}" readonly>
+                                <svg class="lock-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Row 3 Left: Diabetes Pedigree Function -->
+                        <div class="input-group">
+                            <label for="pedigreeInput">Diabetes Pedigree Function</label>
+                            <input type="number" id="pedigreeInput" name="pedigree" step="0.01" min="0" max="3" placeholder="e.g. 0.47" value="{% if latest_pred %}{{ latest_pred.Diabetes_pedigree }}{% endif %}">
+                            <span class="error-text" id="pedigreeError">Please enter a valid pedigree score (0.0 to 3.0).</span>
+                        </div>
+
+                        <!-- Row 3 Right: Skin Thickness -->
+                        <div class="input-group">
+                            <label for="skinInput">Skin Thickness (mm)</label>
+                            <input type="number" id="skinInput" name="skin_thickness" step="0.1" min="0" max="100" placeholder="e.g. 20" value="{% if latest_pred %}{{ latest_pred.Skin_Thickness }}{% endif %}">
+                            <span class="error-text" id="skinError">Please enter valid skin thickness (0 to 100 mm).</span>
+                        </div>
+
+                    </div>
+
+                    <!-- Insulin Categories & Live Comparison Section -->
+                    <div class="input-group full-width" style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 16px; padding: 22px; margin-top: 6px; margin-bottom: 24px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                            <label style="font-size: 15px; color: #0B2840; font-weight: 800; display: flex; align-items: center; gap: 8px;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                                Insulin Categories & Comparison (mu U/ml)
+                            </label>
+                            <span style="font-size: 12px; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 5px 12px; border-radius: 20px;">Before Fasting vs After Fasting</span>
+                        </div>
+
+                        <div class="grid-2-cols" style="margin-bottom: 0;">
+                            <div class="input-group">
+                                <label for="insulinFastingInput" style="font-size: 13.5px;">Before Fasting Insulin</label>
+                                <input type="number" id="insulinFastingInput" name="insulin_fasting" step="0.1" min="0" max="400" placeholder="e.g. 12 (Normal: 2-25 mu U/ml)" value="{% if latest_pred %}{{ latest_pred.Insulin }}{% endif %}">
+                                <span class="error-text" id="insulinFastingError">Please enter valid before fasting insulin (0 to 400 mu U/ml).</span>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="insulinPostFastingInput" style="font-size: 13.5px;">After Fasting Insulin</label>
+                                <input type="number" id="insulinPostFastingInput" name="insulin_post_fasting" step="0.1" min="0" max="900" placeholder="e.g. 65 (Normal: 16-166 mu U/ml)">
+                                <span class="error-text" id="insulinPostFastingError">Please enter valid after fasting insulin (0 to 900 mu U/ml).</span>
+                            </div>
+                        </div>
+
+                        <!-- Hidden compatibility input -->
+                        <input type="hidden" id="insulinInput" name="insulin" value="80">
+
+                        <!-- Insulin Comparison Card Widget -->
+                        <div id="insulinComparisonCard" style="margin-top: 18px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 18px; display: none; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);">
+                            <div style="font-size: 13px; font-weight: 800; color: #0B2840; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                                <span>Insulin Shift & Comparison Analysis</span>
+                                <span id="insulinDiffBadge" style="font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 8px; background: #f1f5f9; color: #334155;">-</span>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; text-align: center; background: #f8fafc; padding: 14px; border-radius: 10px; margin-bottom: 14px; border: 1px solid #e2e8f0;">
+                                <div>
+                                    <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Before Fasting</div>
+                                    <div id="compFastingVal" style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 3px;">-</div>
+                                    <div id="compFastingStatus" style="font-size: 11px; font-weight: 700; color: #64748b; margin-top: 2px;">-</div>
+                                </div>
+                                <div style="border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
+                                    <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">After Fasting</div>
+                                    <div id="compPostVal" style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 3px;">-</div>
+                                    <div id="compPostStatus" style="font-size: 11px; font-weight: 700; color: #64748b; margin-top: 2px;">-</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Comparison Shift</div>
+                                    <div id="compShiftVal" style="font-size: 16px; font-weight: 800; color: #0369a1; margin-top: 3px;">-</div>
+                                    <div id="compShiftRatio" style="font-size: 11px; font-weight: 700; color: #64748b; margin-top: 2px;">-</div>
+                                </div>
+                            </div>
+
+                            <div id="compSummaryText" style="font-size: 13.5px; color: #334155; line-height: 1.5; font-weight: 500;">
+                                Enter both Before Fasting and After Fasting insulin values to generate real-time comparison insights.
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="form-divider">
+
+                    <!-- Predict Risk Analysis Button -->
+                    <button type="submit" class="btn-predict" id="predictBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        Predict Risk Analysis
+                    </button>
+
+                    <!-- Disclaimer -->
+                    <p class="disclaimer-text">
+                        By clicking Predict, you agree to our clinical data processing terms. This tool is for screening purposes and does not replace professional medical advice.
+                    </p>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Prediction Result Modal Popup -->
+    <div class="popup-overlay" id="resultModal">
+        <div class="popup-card">
+            <div class="popup-header">
+                <div id="riskBadge" class="result-badge low">Low Risk</div>
+                <div class="score-display"><span id="riskScore">15</span>% Risk</div>
+                <div class="score-subtext">AI Risk Assessment Result (<span id="resultDate">Today</span>)</div>
+            </div>
+
+            <!-- Insulin Category Comparison Assessment inside Modal -->
+            <div id="modalInsulinComparison" style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 18px 20px; margin: 18px 0; text-align: left;">
+                <div style="font-size: 12px; font-weight: 800; color: #0B2840; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+                    <span>Insulin Category Comparison</span>
+                    <span style="font-size: 11px; background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 6px; font-weight: 700;">Before vs After Fasting</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13.5px; margin-bottom: 8px;">
+                    <div style="background: #ffffff; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                        <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; display: block;">Before Fasting</span>
+                        <strong id="modalFastingInsulin" style="font-size: 15px; color: #0f172a;">-</strong>
+                    </div>
+                    <div style="background: #ffffff; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                        <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; display: block;">After Fasting</span>
+                        <strong id="modalPostInsulin" style="font-size: 15px; color: #0f172a;">-</strong>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; padding-top: 6px;">
+                    <span style="color: #64748b; font-weight: 700;">Comparison Shift:</span>
+                    <strong id="modalInsulinShift" style="color: #0369a1; font-weight: 800;">-</strong>
+                </div>
+                <div id="modalInsulinEval" style="font-size: 12.5px; color: #334155; line-height: 1.4; font-weight: 600; background: #ffffff; padding: 10px 12px; border-radius: 8px; border-left: 3.5px solid #0369a1;"></div>
+            </div>
+
+            <!-- Two-Way Blood Pressure Category & Range Analysis inside Modal -->
+            <div id="modalBpAnalysis" style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 18px 20px; margin: 18px 0; text-align: left;">
+                <div style="font-size: 12px; font-weight: 800; color: #0B2840; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+                    <span>Blood Pressure Analysis</span>
+                    <span id="modalBpBadge" style="font-size: 11px; background: #dcfce7; color: #15803d; padding: 3px 10px; border-radius: 20px; font-weight: 800;">Normal BP</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13.5px; margin-bottom: 4px;">
+                    <div style="background: #ffffff; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                        <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; display: block;">Systolic / Diastolic</span>
+                        <strong id="modalBpReading" style="font-size: 15px; color: #0f172a;">120 / 80 mm Hg</strong>
+                    </div>
+                    <div style="background: #ffffff; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                        <span style="color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; display: block;">Analyzed Category Range</span>
+                        <strong id="modalBpRange" style="font-size: 13.5px; color: #0369a1;">&lt;120 / &lt;80 mm Hg</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personalized Clinical Suggestions Drawer inside Modal -->
+            <div id="modalSuggestionsContainer" style="display: none; background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 16px; padding: 18px; margin: 18px 0; text-align: left;">
+                <div style="font-size: 13px; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                        Personalized Clinical Suggestions
+                    </span>
+                    <a href="{% url 'view_prediction' %}" style="font-size: 11.5px; color: #15803d; font-weight: 700; text-decoration: underline;">View Full Report →</a>
+                </div>
+
+                <!-- Urgent Doctor Warning Alert (For High Risk Users) -->
+                <div id="modalDoctorAlert" style="display: none; background-color: #fef2f2; border: 2px solid #ef4444; border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; text-align: left;">
+                    <div style="display: flex; align-items: center; gap: 10px; color: #b91c1c; font-weight: 800; font-size: 14px;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <span>URGENT MEDICAL ADVISORY</span>
+                    </div>
+                    <p id="modalDoctorText" style="font-size: 13.5px; color: #991b1b; font-weight: 700; margin-top: 6px; line-height: 1.4;">
+                        🚨 You have to see a doctor immediately for professional medical consultation and clinical evaluation.
+                    </p>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+                    <div style="background: #ffffff; padding: 10px 14px; border-radius: 8px; border: 1px solid #dcfce7;">
+                        <strong style="color: #15803d; display: block; margin-bottom: 2px;">🥗 Recommended Diet Plan</strong>
+                        <span id="modalDietText" style="color: #334155; line-height: 1.4; display: block;"></span>
+                    </div>
+                    <div style="background: #ffffff; padding: 10px 14px; border-radius: 8px; border: 1px solid #dcfce7;">
+                        <strong style="color: #15803d; display: block; margin-bottom: 2px;">🏃 Physical Exercise Plan</strong>
+                        <span id="modalExerciseText" style="color: #334155; line-height: 1.4; display: block;"></span>
+                    </div>
+                    <div style="background: #ffffff; padding: 10px 14px; border-radius: 8px; border: 1px solid #dcfce7;">
+                        <strong style="color: #15803d; display: block; margin-bottom: 2px;">💧 Hydration & Sleep Target</strong>
+                        <span id="modalLifestyleText" style="color: #334155; line-height: 1.4; display: block;"></span>
+                    </div>
+                    <div style="background: #ffffff; padding: 10px 14px; border-radius: 8px; border: 1px solid #dcfce7;">
+                        <strong style="color: #15803d; display: block; margin-bottom: 2px;">⚖️ Weight Management Guidance</strong>
+                        <span id="modalWeightText" style="color: #334155; line-height: 1.4; display: block;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popup Action Buttons -->
+            <div class="popup-actions" style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="popup-btn popup-btn-secondary" id="closeModalBtn">Close</button>
+                <button class="popup-btn" id="toggleSuggestionsBtn" style="background: #0284c7; color: #ffffff; border: none; display: flex; align-items: center; justify-content: center; gap: 6px; flex: 1.2;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                    View Suggestions
+                </button>
+                <a href="{% url 'view_prediction' %}" class="popup-btn popup-btn-primary" style="flex: 1;">View Full Report</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Form Handler -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('predictionForm');
+            const modal = document.getElementById('resultModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const predictBtn = document.getElementById('predictBtn');
+            const banner = document.getElementById('validationErrorBanner');
+
+            const fields = [
+                { id: 'pregnanciesInput', errorId: 'pregnanciesError', min: 0, max: 20 },
+                { id: 'glucoseInput', errorId: 'glucoseError', min: 40, max: 400 },
+                { id: 'systolicBpInput', errorId: 'systolicBpError', min: 50, max: 260 },
+                { id: 'diastolicBpInput', errorId: 'diastolicBpError', min: 30, max: 160 },
+                { id: 'pedigreeInput', errorId: 'pedigreeError', min: 0, max: 3 },
+                { id: 'skinInput', errorId: 'skinError', min: 0, max: 100 }
+            ];
+
+            const systolicBpInput = document.getElementById('systolicBpInput');
+            const diastolicBpInput = document.getElementById('diastolicBpInput');
+            const bpInput = document.getElementById('bpInput');
+
+            function evaluateBloodPressure() {
+                if (!systolicBpInput || !diastolicBpInput) return;
+
+                const sysStr = systolicBpInput.value.trim();
+                const diaStr = diastolicBpInput.value.trim();
+
+                const bpBadge = document.getElementById('bpBadge');
+                const sysRangeVal = document.getElementById('sysRangeVal');
+                const diaRangeVal = document.getElementById('diaRangeVal');
+                const pulsePressVal = document.getElementById('pulsePressVal');
+                const mapVal = document.getElementById('mapVal');
+                const bpSummaryText = document.getElementById('bpSummaryText');
+
+                if (sysStr === '' && diaStr === '') {
+                    if (bpBadge) {
+                        bpBadge.innerText = 'Not Entered';
+                        bpBadge.style.cssText = 'font-size: 12.5px; font-weight: 800; padding: 5px 14px; border-radius: 30px; background: #f1f5f9; color: #64748b;';
+                    }
+                    if (sysRangeVal) sysRangeVal.innerText = '-';
+                    if (diaRangeVal) diaRangeVal.innerText = '-';
+                    if (pulsePressVal) pulsePressVal.innerText = '-';
+                    if (mapVal) mapVal.innerText = '-';
+                    if (bpSummaryText) bpSummaryText.innerHTML = '<i>Enter Systolic and Diastolic Blood Pressure readings above.</i>';
+                    if (bpInput) bpInput.value = '';
+                    return;
+                }
+
+                const sys = parseFloat(sysStr) || 115;
+                const dia = parseFloat(diaStr) || 75;
+
+                if (bpInput) bpInput.value = dia;
+
+                const pulsePressure = Math.round(sys - dia);
+                const map = Math.round(dia + (sys - dia) / 3.0);
+
+                if (pulsePressVal) pulsePressVal.innerText = `${pulsePressure} mm Hg`;
+                if (mapVal) mapVal.innerText = `${map} mm Hg`;
+
+                let category = "Normal BP";
+                let badgeStyle = "background: #dcfce7; color: #15803d;";
+                let sysRange = "< 120 mm Hg";
+                let diaRange = "< 80 mm Hg";
+                let explanation = "";
+
+                if (sys >= 180 || dia >= 120) {
+                    category = "🚨 Hypertensive Crisis";
+                    badgeStyle = "background: #fee2e2; color: #991b1b; border: 1px solid #ef4444;";
+                    sysRange = "≥ 180 mm Hg";
+                    diaRange = "≥ 120 mm Hg";
+                    explanation = `URGENT MEDICAL ALERT: Blood Pressure of <strong>${sys} / ${dia} mm Hg</strong> is in the <strong>Hypertensive Crisis</strong> range. Consult a physician immediately.`;
+                } else if (sys >= 140 || dia >= 90) {
+                    category = "Stage 2 Hypertension";
+                    badgeStyle = "background: #fee2e2; color: #b91c1c;";
+                    sysRange = "≥ 140 mm Hg";
+                    diaRange = "≥ 90 mm Hg";
+                    explanation = `Blood Pressure of <strong>${sys} / ${dia} mm Hg</strong> is categorized as <strong>Stage 2 Hypertension</strong> (Clinical range: Systolic ≥ 140 or Diastolic ≥ 90 mm Hg).`;
+                } else if ((sys >= 130 && sys <= 139) || (dia >= 80 && dia <= 89)) {
+                    category = "Stage 1 Hypertension";
+                    badgeStyle = "background: #ffedd5; color: #c2410c;";
+                    sysRange = "130 - 139 mm Hg";
+                    diaRange = "80 - 89 mm Hg";
+                    explanation = `Blood Pressure of <strong>${sys} / ${dia} mm Hg</strong> is categorized as <strong>Stage 1 Hypertension</strong> (Clinical range: Systolic 130–139 or Diastolic 80–89 mm Hg).`;
+                } else if (sys >= 120 && sys <= 129 && dia < 80) {
+                    category = "Elevated Blood Pressure";
+                    badgeStyle = "background: #fef3c7; color: #b45309;";
+                    sysRange = "120 - 129 mm Hg";
+                    diaRange = "< 80 mm Hg";
+                    explanation = `Blood Pressure of <strong>${sys} / ${dia} mm Hg</strong> is in the <strong>Elevated BP</strong> category (Systolic 120–129 mm Hg with normal Diastolic < 80 mm Hg).`;
+                } else {
+                    category = "Normal (Optimal BP)";
+                    badgeStyle = "background: #dcfce7; color: #15803d;";
+                    sysRange = "< 120 mm Hg";
+                    diaRange = "< 80 mm Hg";
+                    explanation = `Blood Pressure of <strong>${sys} / ${dia} mm Hg</strong> is in the <strong>Normal (Optimal BP)</strong> category (Target range: Systolic < 120 and Diastolic < 80 mm Hg).`;
+                }
+
+                if (bpBadge) {
+                    bpBadge.innerText = category;
+                    bpBadge.style.cssText = `font-size: 12.5px; font-weight: 800; padding: 5px 14px; border-radius: 30px; ${badgeStyle}`;
+                }
+                if (sysRangeVal) sysRangeVal.innerText = sysRange;
+                if (diaRangeVal) diaRangeVal.innerText = diaRange;
+                if (bpSummaryText) bpSummaryText.innerHTML = explanation;
+            }
+
+            if (systolicBpInput && diastolicBpInput) {
+                systolicBpInput.addEventListener('input', evaluateBloodPressure);
+                diastolicBpInput.addEventListener('input', evaluateBloodPressure);
+                evaluateBloodPressure();
+            }
+
+            const insulinFastingInput = document.getElementById('insulinFastingInput');
+            const insulinPostFastingInput = document.getElementById('insulinPostFastingInput');
+            const insulinComparisonCard = document.getElementById('insulinComparisonCard');
+            const compFastingVal = document.getElementById('compFastingVal');
+            const compPostVal = document.getElementById('compPostVal');
+            const compFastingStatus = document.getElementById('compFastingStatus');
+            const compPostStatus = document.getElementById('compPostStatus');
+            const compShiftVal = document.getElementById('compShiftVal');
+            const compShiftRatio = document.getElementById('compShiftRatio');
+            const compSummaryText = document.getElementById('compSummaryText');
+            const insulinDiffBadge = document.getElementById('insulinDiffBadge');
+
+            function validateInsulin() {
+                const fastingStr = insulinFastingInput ? insulinFastingInput.value.trim() : '';
+                const postStr = insulinPostFastingInput ? insulinPostFastingInput.value.trim() : '';
+                const fastingErr = document.getElementById('insulinFastingError');
+                const postErr = document.getElementById('insulinPostFastingError');
+
+                if (fastingStr === '' && postStr === '') {
+                    if (fastingErr) { fastingErr.style.display = 'block'; fastingErr.innerText = 'Please enter at least one insulin reading (Before or After Fasting).'; }
+                    if (postErr) { postErr.style.display = 'block'; postErr.innerText = 'Please enter at least one insulin reading (Before or After Fasting).'; }
+                    insulinFastingInput.classList.add('error');
+                    insulinPostFastingInput.classList.add('error');
+                    return false;
+                }
+
+                let valid = true;
+                if (fastingStr !== '') {
+                    const num = parseFloat(fastingStr);
+                    if (isNaN(num) || num < 0 || num > 400) {
+                        if (fastingErr) { fastingErr.style.display = 'block'; fastingErr.innerText = 'Please enter valid insulin level (0 to 400 mu U/ml).'; }
+                        insulinFastingInput.classList.add('error');
+                        valid = false;
+                    } else {
+                        if (fastingErr) fastingErr.style.display = 'none';
+                        insulinFastingInput.classList.remove('error');
+                    }
+                } else {
+                    if (fastingErr) fastingErr.style.display = 'none';
+                    insulinFastingInput.classList.remove('error');
+                }
+
+                if (postStr !== '') {
+                    const num = parseFloat(postStr);
+                    if (isNaN(num) || num < 0 || num > 900) {
+                        if (postErr) { postErr.style.display = 'block'; postErr.innerText = 'Please enter valid insulin level (0 to 900 mu U/ml).'; }
+                        insulinPostFastingInput.classList.add('error');
+                        valid = false;
+                    } else {
+                        if (postErr) postErr.style.display = 'none';
+                        insulinPostFastingInput.classList.remove('error');
+                    }
+                } else {
+                    if (postErr) postErr.style.display = 'none';
+                    insulinPostFastingInput.classList.remove('error');
+                }
+
+                return valid;
+            }
+
+            function updateInsulinComparison() {
+                if (!insulinFastingInput || !insulinPostFastingInput || !insulinComparisonCard) return;
+
+                const fastingStr = insulinFastingInput.value.trim();
+                const postStr = insulinPostFastingInput.value.trim();
+                const fastingVal = parseFloat(fastingStr);
+                const postVal = parseFloat(postStr);
+
+                const hasFasting = !isNaN(fastingVal) && fastingStr !== '';
+                const hasPost = !isNaN(postVal) && postStr !== '';
+
+                if (hasFasting || hasPost) {
+                    insulinComparisonCard.style.display = 'block';
+
+                    if (hasFasting && hasPost) {
+                        const diff = postVal - fastingVal;
+                        const ratio = fastingVal > 0 ? (postVal / fastingVal).toFixed(1) : 'N/A';
+
+                        compFastingVal.innerText = `${fastingVal} mu U/ml`;
+                        compPostVal.innerText = `${postVal} mu U/ml`;
+
+                        let fastingStatus = 'Normal Fasting Range';
+                        let fastingColor = '#16a34a';
+                        if (fastingVal > 25) {
+                            fastingStatus = 'High (Insulin Resistance)';
+                            fastingColor = '#dc2626';
+                        } else if (fastingVal < 2) {
+                            fastingStatus = 'Low Fasting Level';
+                            fastingColor = '#d97706';
+                        }
+                        compFastingStatus.innerText = fastingStatus;
+                        compFastingStatus.style.color = fastingColor;
+
+                        let postStatus = 'Normal Postprandial Response';
+                        let postColor = '#16a34a';
+                        if (postVal > 166) {
+                            postStatus = 'Elevated Post-Meal Spike';
+                            postColor = '#dc2626';
+                        } else if (postVal < 16) {
+                            postStatus = 'Low Postprandial Response';
+                            postColor = '#d97706';
+                        }
+                        compPostStatus.innerText = postStatus;
+                        compPostStatus.style.color = postColor;
+
+                        const sign = diff >= 0 ? '+' : '';
+                        compShiftVal.innerText = `${sign}${diff.toFixed(1)} mu U/ml`;
+                        compShiftRatio.innerText = ratio !== 'N/A' ? `${ratio}x Fold Change` : '';
+                        insulinDiffBadge.innerText = `${sign}${diff.toFixed(1)} mu U/ml`;
+
+                        let summary = '';
+                        if (fastingVal > 25) {
+                            summary = `⚠️ <b>High Fasting Insulin (${fastingVal} mu U/ml)</b>: Indicates baseline insulin resistance. Combined with After Fasting level (${postVal} mu U/ml), overall metabolic response shows elevated strain.`;
+                        } else if (postVal > 166) {
+                            summary = `⚠️ <b>Elevated After Fasting Spike (${postVal} mu U/ml)</b>: Insulin level rose significantly by +${diff.toFixed(1)} mu U/ml (${ratio}x increase), indicating potential postprandial hyperinsulinemia.`;
+                        } else if (diff > 0) {
+                            summary = `✅ <b>Normal Physiological Shift</b>: Before fasting level is ${fastingVal} mu U/ml and after fasting level is ${postVal} mu U/ml (+${diff.toFixed(1)} mu U/ml, ${ratio}x increase). Reflects healthy postprandial insulin release.`;
+                        } else {
+                            summary = `ℹ️ <b>Comparison Note</b>: After fasting insulin (${postVal} mu U/ml) is equal to or lower than before fasting level (${fastingVal} mu U/ml). Please check lab test timestamp.`;
+                        }
+
+                        compSummaryText.innerHTML = summary;
+                        const legacyInput = document.getElementById('insulinInput');
+                        if (legacyInput) legacyInput.value = Math.max(fastingVal, postVal);
+                    } else if (hasPost) {
+                        compFastingVal.innerText = 'Not provided';
+                        compPostVal.innerText = `${postVal} mu U/ml`;
+                        compFastingStatus.innerText = 'Single Checkup Entry';
+                        compFastingStatus.style.color = '#64748b';
+
+                        let postStatus = 'Normal Post-Meal Level';
+                        let postColor = '#16a34a';
+                        if (postVal > 166) { postStatus = 'Elevated Level'; postColor = '#dc2626'; }
+                        else if (postVal < 16) { postStatus = 'Low Response'; postColor = '#d97706'; }
+                        compPostStatus.innerText = postStatus;
+                        compPostStatus.style.color = postColor;
+
+                        compShiftVal.innerText = 'Single Reading';
+                        compShiftRatio.innerText = 'No Baseline';
+                        insulinDiffBadge.innerText = 'After Fasting Only';
+
+                        let summary = `ℹ️ <b>Single Checkup Entry (After Fasting Insulin = ${postVal} mu U/ml)</b>: Prediction risk calculated using After Fasting insulin level. Normal range: 16–166 mu U/ml.`;
+                        if (postVal > 166) {
+                            summary = `⚠️ <b>Elevated After Fasting Insulin (${postVal} mu U/ml)</b>: High post-meal insulin level evaluated for risk calculation.`;
+                        }
+                        compSummaryText.innerHTML = summary;
+                        const legacyInput = document.getElementById('insulinInput');
+                        if (legacyInput) legacyInput.value = postVal;
+                    } else if (hasFasting) {
+                        compFastingVal.innerText = `${fastingVal} mu U/ml`;
+                        compPostVal.innerText = 'Not provided';
+                        
+                        let fastingStatus = 'Normal Fasting Range';
+                        let fastingColor = '#16a34a';
+                        if (fastingVal > 25) { fastingStatus = 'High (Insulin Resistance)'; fastingColor = '#dc2626'; }
+                        else if (fastingVal < 2) { fastingStatus = 'Low Fasting Level'; fastingColor = '#d97706'; }
+                        compFastingStatus.innerText = fastingStatus;
+                        compFastingStatus.style.color = fastingColor;
+
+                        compPostStatus.innerText = 'Single Checkup Entry';
+                        compPostStatus.style.color = '#64748b';
+
+                        compShiftVal.innerText = 'Single Reading';
+                        compShiftRatio.innerText = 'No Post-Meal Data';
+                        insulinDiffBadge.innerText = 'Before Fasting Only';
+
+                        let summary = `ℹ️ <b>Single Checkup Entry (Before Fasting Insulin = ${fastingVal} mu U/ml)</b>: Prediction risk calculated using Fasting insulin level. Normal range: 2–25 mu U/ml.`;
+                        if (fastingVal > 25) {
+                            summary = `⚠️ <b>High Fasting Insulin (${fastingVal} mu U/ml)</b>: Elevated baseline insulin level evaluated for risk calculation.`;
+                        }
+                        compSummaryText.innerHTML = summary;
+                        const legacyInput = document.getElementById('insulinInput');
+                        if (legacyInput) legacyInput.value = fastingVal;
+                    }
+                } else {
+                    insulinComparisonCard.style.display = 'none';
+                }
+            }
+
+            if (insulinFastingInput && insulinPostFastingInput) {
+                insulinFastingInput.addEventListener('input', () => { validateInsulin(); updateInsulinComparison(); });
+                insulinPostFastingInput.addEventListener('input', () => { validateInsulin(); updateInsulinComparison(); });
+                updateInsulinComparison();
+            }
+
+            function validateField(config) {
+                const input = document.getElementById(config.id);
+                const error = document.getElementById(config.errorId);
+                if (!input || !error) return true;
+
+                const val = input.value.trim();
+
+                if (val === '') {
+                    input.classList.add('error');
+                    error.style.display = 'block';
+                    return false;
+                }
+
+                const num = parseFloat(val);
+                if (isNaN(num) || num < config.min || num > config.max) {
+                    input.classList.add('error');
+                    error.style.display = 'block';
+                    return false;
+                }
+
+                input.classList.remove('error');
+                error.style.display = 'none';
+                return true;
+            }
+
+            fields.forEach(config => {
+                const input = document.getElementById(config.id);
+                if (input) {
+                    input.addEventListener('input', () => validateField(config));
+                    input.addEventListener('blur', () => validateField(config));
+                }
+            });
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                let isValid = true;
+                fields.forEach(config => {
+                    if (!validateField(config)) {
+                        isValid = false;
+                    }
+                });
+
+                if (!validateInsulin()) {
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    banner.style.display = 'block';
+                    banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                } else {
+                    banner.style.display = 'none';
+                }
+
+                predictBtn.disabled = true;
+                predictBtn.style.opacity = '0.7';
+                predictBtn.innerHTML = 'Analyzing Medical Data...';
+
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch("{% url 'predict_risk' %}", {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        }
+                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        const badge = document.getElementById('riskBadge');
+                        badge.innerText = data.risk_level;
+                        badge.className = 'result-badge ' + (data.risk_level.toLowerCase().includes('high') ? 'high' : (data.risk_level.toLowerCase().includes('mod') ? 'moderate' : 'low'));
+                        
+                        document.getElementById('riskScore').innerText = data.risk_score;
+                        document.getElementById('resultDate').innerText = data.prediction_date;
+
+                        if (document.getElementById('modalBpReading')) {
+                            document.getElementById('modalBpReading').innerText = data.bp_reading || '120 / 80 mm Hg';
+                        }
+                        if (document.getElementById('modalBpRange')) {
+                            document.getElementById('modalBpRange').innerText = `${data.bp_category || 'Normal'} (Range: ${data.bp_range || '<120/<80 mm Hg'})`;
+                        }
+                        if (document.getElementById('modalBpBadge')) {
+                            const modalBpBadge = document.getElementById('modalBpBadge');
+                            modalBpBadge.innerText = data.bp_category || 'Normal BP';
+                            if (data.bp_color === 'high') {
+                                modalBpBadge.style.cssText = "font-size: 11px; background: #fee2e2; color: #b91c1c; padding: 3px 10px; border-radius: 20px; font-weight: 800;";
+                            } else if (data.bp_color === 'moderate') {
+                                modalBpBadge.style.cssText = "font-size: 11px; background: #fef3c7; color: #b45309; padding: 3px 10px; border-radius: 20px; font-weight: 800;";
+                            } else {
+                                modalBpBadge.style.cssText = "font-size: 11px; background: #dcfce7; color: #15803d; padding: 3px 10px; border-radius: 20px; font-weight: 800;";
+                            }
+                        }
+
+                        if (document.getElementById('modalFastingInsulin')) {
+                            document.getElementById('modalFastingInsulin').innerText = data.insulin_fasting;
+                        }
+                        if (document.getElementById('modalPostInsulin')) {
+                            document.getElementById('modalPostInsulin').innerText = data.insulin_post_fasting;
+                        }
+                        if (document.getElementById('modalInsulinShift')) {
+                            const shiftSign = (data.insulin_diff && !data.insulin_diff.includes('Single') && !data.insulin_diff.includes('-')) ? '+' : '';
+                            document.getElementById('modalInsulinShift').innerText = (data.insulin_ratio && data.insulin_ratio !== 'N/A') ? `${shiftSign}${data.insulin_diff} (${data.insulin_ratio}x)` : data.insulin_diff;
+                        }
+                        if (document.getElementById('modalInsulinEval')) {
+                            document.getElementById('modalInsulinEval').innerText = data.insulin_eval;
+                        }
+
+                        // Populate Clinical Suggestions inside modal
+                        if (document.getElementById('modalDietText') && data.diet) {
+                            document.getElementById('modalDietText').innerText = data.diet;
+                        }
+                        if (document.getElementById('modalExerciseText') && data.exercise) {
+                            document.getElementById('modalExerciseText').innerText = data.exercise;
+                        }
+                        if (document.getElementById('modalLifestyleText') && (data.water || data.sleep)) {
+                            document.getElementById('modalLifestyleText').innerText = `Hydration Target: ${data.water || '2.5 L/day'} | Sleep Goal: ${data.sleep || '8 hrs/day'}`;
+                        }
+                        if (document.getElementById('modalWeightText') && data.weight_mgmt) {
+                            document.getElementById('modalWeightText').innerText = data.weight_mgmt;
+                        }
+
+                        // High Risk Doctor Urgent Advisory Alert
+                        const modalDoctorAlert = document.getElementById('modalDoctorAlert');
+                        const modalDoctorText = document.getElementById('modalDoctorText');
+                        if (data.risk_level && data.risk_level.toLowerCase().includes('high')) {
+                            if (modalDoctorAlert) modalDoctorAlert.style.display = 'block';
+                            if (modalDoctorText) modalDoctorText.innerHTML = '🚨 <b>You have to see a doctor immediately for professional medical consultation and clinical evaluation.</b>';
+                        } else {
+                            if (modalDoctorAlert) modalDoctorAlert.style.display = 'none';
+                        }
+
+                        modal.classList.add('active');
+                    } else {
+                        alert(data.message || 'An error occurred during prediction analysis.');
+                    }
+                } catch (err) {
+                    console.error('Prediction Error:', err);
+                    alert('Submission complete. Please view your result on your profile.');
+                } finally {
+                    predictBtn.disabled = false;
+                    predictBtn.style.opacity = '1';
+                    predictBtn.innerHTML = `
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        Predict Risk Analysis`;
+                }
+            });
+
+            // Toggle Suggestions Drawer inside Modal
+            const toggleSuggestionsBtn = document.getElementById('toggleSuggestionsBtn');
+            const modalSuggestionsContainer = document.getElementById('modalSuggestionsContainer');
+            if (toggleSuggestionsBtn && modalSuggestionsContainer) {
+                toggleSuggestionsBtn.addEventListener('click', function() {
+                    if (modalSuggestionsContainer.style.display === 'none' || modalSuggestionsContainer.style.display === '') {
+                        modalSuggestionsContainer.style.display = 'block';
+                        toggleSuggestionsBtn.innerHTML = `
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+                            Hide Suggestions`;
+                        modalSuggestionsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    } else {
+                        modalSuggestionsContainer.style.display = 'none';
+                        toggleSuggestionsBtn.innerHTML = `
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                            View Suggestions`;
+                    }
+                });
+            }
+
+            closeModalBtn.addEventListener('click', function() {
+                modal.classList.remove('active');
+                if (modalSuggestionsContainer) {
+                    modalSuggestionsContainer.style.display = 'none';
+                }
+                if (toggleSuggestionsBtn) {
+                    toggleSuggestionsBtn.innerHTML = `
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                        View Suggestions`;
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

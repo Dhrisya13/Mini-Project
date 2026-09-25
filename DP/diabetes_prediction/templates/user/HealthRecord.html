@@ -1,0 +1,796 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Risk Prediction - Diabetes Care</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header / Navigation Bar */
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 0;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon-box {
+            width: 38px;
+            height: 38px;
+            background-color: #0B2840;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(11, 40, 64, 0.15);
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 800;
+            color: #0B2840;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #475569;
+            transition: color 0.2s ease;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-item a:hover {
+            color: #0B2840;
+        }
+
+        .nav-item.active a {
+            color: #0B2840;
+            font-weight: 700;
+        }
+
+        .nav-item.active a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background-color: #0B2840;
+            border-radius: 2px;
+        }
+
+        .btn-nav-outline {
+            border: 1.5px solid #0B2840;
+            color: #0B2840 !important;
+            padding: 7px 18px;
+            border-radius: 50px;
+            font-weight: 700 !important;
+            transition: all 0.2s ease;
+        }
+
+        .btn-nav-outline:hover {
+            background-color: #0B2840;
+            color: #ffffff !important;
+        }
+
+        /* Main Container */
+        .main-wrapper {
+            flex: 1;
+            padding: 36px 20px 60px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 920px;
+        }
+
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-title {
+            color: #0B2840;
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .page-subtitle {
+            color: #64748b;
+            font-size: 14.5px;
+            font-weight: 500;
+        }
+
+        /* Section Card Container */
+        .section-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 28px 30px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03);
+        }
+
+        /* Section Header */
+        .section-title {
+            color: #0B2840;
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-divider {
+            border: none;
+            border-top: 1px solid #f1f5f9;
+            margin-bottom: 22px;
+        }
+
+        /* Grid Layouts */
+        .grid-2-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-3-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Input Fields */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="email"],
+        select {
+            width: 100%;
+            height: 46px;
+            padding: 0 16px;
+            font-size: 14.5px;
+            font-weight: 500;
+            color: #0f172a;
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.2s ease;
+            appearance: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #0B2840;
+            box-shadow: 0 0 0 3px rgba(11, 40, 64, 0.1);
+        }
+
+        select {
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23475569%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px top 50%;
+            background-size: 10px auto;
+        }
+
+        input:read-only, select:disabled {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 700;
+            cursor: not-allowed;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            margin-top: 10px;
+            margin-bottom: 40px;
+        }
+
+        .btn-view-profile {
+            background-color: #ffffff;
+            color: #0B2840;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-view-profile:hover {
+            border-color: #0B2840;
+            background-color: #f8fafc;
+        }
+
+        .btn-edit {
+
+            background-color: #ffffff;
+            color: #0B2840;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 12px 28px;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit:hover {
+            border-color: #0B2840;
+            background-color: #f8fafc;
+        }
+
+        .btn-save {
+            background-color: #0B2840;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 36px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(11, 40, 64, 0.2);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-save:hover {
+            background-color: #143A5D;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(11, 40, 64, 0.28);
+        }
+
+        /* Modal Popup Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-card {
+            background: #ffffff;
+            width: 90%;
+            max-width: 440px;
+            border-radius: 20px;
+            padding: 36px 30px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .popup-overlay.active .popup-card {
+            transform: scale(1);
+        }
+
+        .popup-icon-wrapper {
+            width: 64px; height: 64px;
+            background: #ecfdf5;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px auto;
+        }
+
+        .popup-icon {
+            width: 32px; height: 32px;
+            color: #10b981;
+        }
+
+        .popup-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .popup-text {
+            font-size: 14.5px;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        .risk-badge.low { background: #ecfdf5; color: #047857; }
+        .risk-badge.moderate { background: #fffbeb; color: #b45309; }
+        .risk-badge.high { background: #fef2f2; color: #b91c1c; }
+
+        .popup-btn {
+            width: 100%;
+            height: 48px;
+            background: #0B2840;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .popup-btn:hover {
+            background: #143A5D;
+        }
+
+        .popup-btn-secondary {
+            flex: 1;
+            height: 48px;
+            background: #ffffff;
+            color: #475569;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .popup-btn-secondary:hover {
+            border-color: #0B2840;
+            color: #0B2840;
+        }
+
+
+        @media (max-width: 768px) {
+            .grid-2-cols, .grid-3-cols {
+                grid-template-columns: 1fr;
+            }
+            .action-buttons {
+                flex-direction: column-reverse;
+            }
+            .btn-edit, .btn-save {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header>
+        <div class="header-container">
+            <a href="{% url 'home' %}" class="brand-logo">
+                <div class="logo-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="4" />
+                        <path d="M12 8v8M8 12h8" />
+                    </svg>
+                </div>
+                <span class="brand-name">DIABETES CARE</span>
+            </a>
+
+            <ul class="nav-links">
+                <li class="nav-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item active"><a href="{% url 'health_record' %}">Health Record</a></li>
+                <li class="nav-item"><a href="{% url 'predict_risk' %}">Risk Prediction</a></li>
+                <li class="nav-item"><a href="{% url 'prediction_history' %}">Database Tracking</a></li>
+                <li class="nav-item"><a href="{% url 'recommendation_engine' %}">Recommendations</a></li>
+                <li class="nav-item"><a href="{% url 'view_profile' %}">Profile</a></li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item"><a href="{% url 'user_logout' %}" class="btn-nav-outline">Logout</a></li>
+                {% else %}
+                    <li class="nav-item"><a href="{% url 'user_login' %}" class="btn-nav-outline">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </header>
+
+    <!-- Main Body Container -->
+    <div class="main-wrapper">
+        <div class="main-container">
+            
+            <div class="page-header">
+                <h1 class="page-title">Health Record</h1>
+                <p class="page-subtitle">View and update your personal health details, physical metrics, and lifestyle record below.</p>
+            </div>
+
+            <!-- Health Record Form -->
+            <form id="healthRecordForm" action="{% url 'health_record' %}" method="POST" novalidate>
+                {% csrf_token %}
+
+                <!-- Validation Error Alert Banner -->
+                <div id="validationErrorBanner" style="display: none; background-color: #fef2f2; border: 1.5px solid #fecaca; color: #dc2626; border-radius: 12px; padding: 14px 20px; font-size: 14.5px; font-weight: 700; margin-bottom: 24px; text-align: center; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.08);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    Please fill in all columns before saving your record.
+                </div>
+
+                <!-- Personal Details Section -->
+
+                <div class="section-card">
+                    <h2 class="section-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        Personal Details
+                    </h2>
+                    <hr class="section-divider">
+
+                    <div class="grid-2-cols">
+                        <div class="input-group">
+                            <label>Full Name</label>
+                            <input type="text" name="full_name" placeholder="Enter Full Name" value="{{ full_name }}" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label>Date of Birth</label>
+                            <input type="date" id="dobInput" name="dob" value="{{ dob }}" readonly tabindex="-1" style="pointer-events: none;">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Email</label>
+                            <input type="email" name="email" placeholder="Enter Email" value="{{ email }}" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label>Gender</label>
+                            <select name="gender_disabled" disabled tabindex="-1" style="pointer-events: none;">
+                                <option value="" disabled {% if not gender %}selected{% endif %}>Select Gender</option>
+                                <option value="male" {% if gender|lower == 'male' %}selected{% endif %}>Male</option>
+                                <option value="female" {% if gender|lower == 'female' %}selected{% endif %}>Female</option>
+                                <option value="other" {% if gender|lower == 'other' %}selected{% endif %}>Other</option>
+                            </select>
+                            <input type="hidden" name="gender" value="{{ gender }}">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Phone Number</label>
+                            <input type="text" name="phone" placeholder="Enter Phone Number" value="{{ phone }}" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label>Age</label>
+                            <input type="number" id="ageOutput" placeholder="0" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Physical Details Section -->
+                <div class="section-card">
+                    <h2 class="section-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        Physical Details
+                    </h2>
+                    <hr class="section-divider">
+
+                    <div class="grid-3-cols">
+                        <div class="input-group">
+                            <label>Height (cm)</label>
+                            <input type="number" id="heightInput" name="height" placeholder="e.g. 175" value="{{ height }}" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label>Weight (kg)</label>
+                            <input type="number" id="weightInput" name="weight" placeholder="e.g. 70" value="{{ weight }}" readonly>
+                        </div>
+                        <div class="input-group">
+                            <label>BMI (Auto Calculated)</label>
+                            <input type="text" id="bmiOutput" placeholder="0.0" readonly>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Lifestyle Details Section -->
+                <div class="section-card">
+                    <h2 class="section-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 15 15"/></svg>
+                        Lifestyle Details
+                    </h2>
+                    <hr class="section-divider">
+
+                    <div class="grid-2-cols">
+                        <div class="input-group">
+                            <label>Smoking Status</label>
+                            <select name="smoking">
+                                <option value="" disabled {% if not smoking %}selected{% endif %}>Select Option</option>
+                                <option value="Non-Smoker" {% if smoking|lower == 'non-smoker' %}selected{% endif %}>Non-Smoker</option>
+                                <option value="Smoker" {% if smoking|lower == 'smoker' %}selected{% endif %}>Smoker</option>
+                                <option value="Occasional" {% if smoking|lower == 'occasional' %}selected{% endif %}>Occasional</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Sleep Duration (hrs/day)</label>
+                            <input type="number" name="sleep_duration" placeholder="Enter sleep duration (hrs)" value="{{ sleep_duration }}">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Alcohol Consumption</label>
+                            <select name="alcohol">
+                                <option value="" disabled {% if not alcohol %}selected{% endif %}>Select Option</option>
+                                <option value="None" {% if alcohol|lower == 'none' %}selected{% endif %}>None</option>
+                                <option value="Occasional" {% if alcohol|lower == 'occasional' %}selected{% endif %}>Occasional</option>
+                                <option value="Frequent" {% if alcohol|lower == 'frequent' %}selected{% endif %}>Frequent</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Water Intake (L/day)</label>
+                            <input type="number" step="0.1" name="water_intake" placeholder="Enter water intake (Liters)" value="{{ water_intake }}">
+                        </div>
+
+                        <div class="input-group full-width">
+                            <label>Physical Activity</label>
+                            <select name="physical_activity">
+                                <option value="" disabled {% if not physical_activity %}selected{% endif %}>Select Option</option>
+                                <option value="Sedentary" {% if physical_activity|lower == 'sedentary' %}selected{% endif %}>Sedentary</option>
+                                <option value="Lightly Active" {% if physical_activity|lower == 'lightly active' %}selected{% endif %}>Lightly Active</option>
+                                <option value="Moderately Active" {% if physical_activity|lower == 'moderately active' %}selected{% endif %}>Moderately Active</option>
+                                <option value="Very Active" {% if physical_activity|lower == 'very active' %}selected{% endif %}>Very Active</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <a href="{% url 'predict_risk' %}" class="btn-edit" style="background: #0B2840; color: #ffffff; border: none;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        Predict Risk Analysis
+                    </a>
+                    <a href="{% url 'edit_profile' %}" class="btn-edit">Edit Profile</a>
+                    <button type="submit" class="btn-save" id="saveRecordBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                        Save Record
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal Popup -->
+    <div class="popup-overlay" id="savePopup">
+        <div class="popup-card">
+            <div class="popup-icon-wrapper">
+                <svg class="popup-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h3 class="popup-title">Successfully Saved!</h3>
+            <p class="popup-text">Your health record details have been saved successfully.</p>
+            <div style="display: flex; gap: 12px; margin-top: 16px;">
+                <button class="popup-btn-secondary" id="closeSavePopupBtn">Close</button>
+                <a href="{% url 'view_profile' %}" class="popup-btn" style="text-decoration: none; display: flex; align-items: center; justify-content: center; flex: 1;">View Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Calculations & Form Submission -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // --- 1. BMI CALCULATION ---
+            const heightField = document.getElementById('heightInput');
+            const weightField = document.getElementById('weightInput');
+            const bmiField = document.getElementById('bmiOutput');
+
+            function calculateBMI() {
+                const heightCm = parseFloat(heightField.value);
+                const weightKg = parseFloat(weightField.value);
+
+                if (!isNaN(heightCm) && !isNaN(weightKg) && heightCm > 0 && weightKg > 0) {
+                    const heightMeters = heightCm / 100;
+                    const bmi = weightKg / (heightMeters * heightMeters);
+                    bmiField.value = bmi.toFixed(1);
+                } else {
+                    bmiField.value = '';
+                }
+            }
+
+            if (heightField && weightField) {
+                heightField.addEventListener('input', calculateBMI);
+                weightField.addEventListener('input', calculateBMI);
+                calculateBMI();
+            }
+
+            // --- 2. AGE CALCULATION ---
+            const dobField = document.getElementById('dobInput');
+            const ageField = document.getElementById('ageOutput');
+
+            function calculateAge() {
+                const dobValue = dobField ? dobField.value : '';
+
+                if (dobValue) {
+                    const dateParts = dobValue.split('-');
+
+                    if (dateParts.length === 3) {
+                        const birthYear = parseInt(dateParts[0], 10);
+                        const birthMonth = parseInt(dateParts[1], 10) - 1;
+                        const birthDay = parseInt(dateParts[2], 10);
+
+                        const today = new Date();
+                        let age = today.getFullYear() - birthYear;
+                        const monthDifference = today.getMonth() - birthMonth;
+
+                        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDay)) {
+                            age--;
+                        }
+
+                        ageField.value = age >= 0 ? age : 0;
+                    }
+                } else {
+                    ageField.value = '';
+                }
+            }
+
+            if (dobField) {
+                dobField.addEventListener('input', calculateAge);
+                dobField.addEventListener('change', calculateAge);
+                calculateAge();
+            }
+
+            // --- 3. WORKING SAVE BUTTON & FORM VALIDATION & SUBMISSION ---
+            const form = document.getElementById('healthRecordForm');
+            const savePopup = document.getElementById('savePopup');
+            const closeSavePopupBtn = document.getElementById('closeSavePopupBtn');
+            const validationBanner = document.getElementById('validationErrorBanner');
+
+            // Clear red error borders when user fills in fields
+            const requiredFields = form.querySelectorAll('input:not([readonly]):not([disabled]), select:not([disabled])');
+            requiredFields.forEach(field => {
+                function clearError() {
+                    if (field.value && field.value.trim() !== '') {
+                        field.style.borderColor = '#cbd5e1';
+                        field.style.backgroundColor = '#ffffff';
+                    }
+                }
+                field.addEventListener('input', clearError);
+                field.addEventListener('change', clearError);
+            });
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                let isValid = true;
+                requiredFields.forEach(field => {
+                    const val = field.value ? field.value.trim() : '';
+                    if (!val) {
+                        isValid = false;
+                        field.style.borderColor = '#ef4444';
+                        field.style.backgroundColor = '#fef2f2';
+                    } else {
+                        field.style.borderColor = '#cbd5e1';
+                        field.style.backgroundColor = '#ffffff';
+                    }
+                });
+
+                if (!isValid) {
+                    validationBanner.style.display = 'block';
+                    validationBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                } else {
+                    validationBanner.style.display = 'none';
+                }
+
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch("{% url 'health_record' %}", {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        }
+                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        savePopup.classList.add('active');
+                    } else {
+                        alert(data.message || "Failed to save health record.");
+                    }
+                } catch (err) {
+                    console.error("Save error:", err);
+                    savePopup.classList.add('active');
+                }
+            });
+
+            closeSavePopupBtn.addEventListener('click', function() {
+                savePopup.classList.remove('active');
+            });
+
+        });
+    </script>
+
+
+
+</body>
+</html>
